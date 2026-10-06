@@ -1,11 +1,13 @@
-import * as electronLog from 'electron-log';
+import electronLog from 'electron-log';
 
 const logFileFormat = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{processType}] [{level}] {text}';
-electronLog.transports.console.format = logFileFormat;
-electronLog.transports.file.format = logFileFormat;
-
-// 2MB .log file size
-electronLog.transports.file.maxSize = 2 * 1024 * 1024;
+if (electronLog.transports.console) {
+	electronLog.transports.console.format = logFileFormat;
+}
+if (electronLog.transports.file) {
+	electronLog.transports.file.format = logFileFormat;
+	electronLog.transports.file.maxSize = 2 * 1024 * 1024;
+}
 
 // one file in stand of main.log & renderer.log
 // electronLog.transports.file.fileName = 'logs.log';

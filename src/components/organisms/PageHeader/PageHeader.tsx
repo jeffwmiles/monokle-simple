@@ -10,11 +10,9 @@ import {ReloadOutlined} from '@ant-design/icons';
 import newGithubIssueUrl from 'new-github-issue-url';
 
 import {TOOLTIP_DELAY} from '@constants/constants';
-import {InitializeGitTooltip, InstallGitTooltip, NotificationsTooltip} from '@constants/tooltips';
+import {NotificationsTooltip} from '@constants/tooltips';
 
-import {activeProjectSelector, updateProjectsGitRepo} from '@redux/appConfig';
-import {setCurrentBranch, setRepo} from '@redux/git';
-import {getRepoInfo, initGitRepo} from '@redux/git/git.ipc';
+import {activeProjectSelector} from '@redux/appConfig';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAutosavingError} from '@redux/reducers/main';
 import {
@@ -25,24 +23,19 @@ import {
   toggleNotifications,
   toggleStartProjectPane,
 } from '@redux/reducers/ui';
-import {monitorGitFolder} from '@redux/services/gitFolderMonitor';
-import store from '@redux/store';
 import {stopPreview} from '@redux/thunks/preview';
 
-import {BranchSelect, NewVersionNotice} from '@molecules';
+import {NewVersionNotice} from '@molecules';
 
 import {useHelpMenuItems} from '@hooks/menuItemsHooks';
 
 import {useRefSelector} from '@utils/hooks';
-import {showGitErrorModal} from '@utils/terminal';
 
 import MonokleKubeshopLogo from '@assets/NewMonokleLogoDark.svg';
 
-import {Icon} from '@monokle/components';
 import {isInClusterModeSelector} from '@shared/utils/selectors';
 import {trackEvent} from '@shared/utils/telemetry';
 
-import {ClusterControls} from './ClusterControl/ClusterControls';
 import DownloadProgress from './DownloadProgress';
 import {K8sVersionSelection} from './K8sVersionSelection';
 import * as S from './PageHeader.styled';
@@ -52,9 +45,6 @@ const PageHeader = () => {
   const activeProject = useAppSelector(activeProjectSelector);
   const autosavingError = useAppSelector(state => state.main.autosaving.error);
   const autosavingStatus = useAppSelector(state => state.main.autosaving.status);
-  const gitLoading = useAppSelector(state => state.git.loading);
-  const hasGitRepo = useAppSelector(state => Boolean(state.git.repo));
-  const isGitInstalled = useAppSelector(state => state.git.isGitInstalled);
   const layoutSize = useAppSelector(state => state.ui.layoutSize);
   const unseenNotificationsCount = useAppSelector(state => state.main.notifications.filter(n => !n.hasSeen).length);
   const isNewVersionAvailable = useAppSelector(state => state.config.isNewVersionAvailable);
@@ -63,13 +53,11 @@ const PageHeader = () => {
   const isInClusterModeRef = useRefSelector(isInClusterModeSelector);
   const isInQuickClusterModeRef = useRefSelector(state => state.ui.isInQuickClusterMode);
   const isStartProjectPaneVisibleRef = useRefSelector(state => state.ui.isStartProjectPaneVisible);
-  const projectRootFolderRef = useRefSelector(state => state.config.selectedProjectRootFolder);
   const startPageSelectedMenuOption = useRefSelector(state => state.ui.startPage.selectedMenuOption);
 
   let timeoutRef = useRef<any>(null);
 
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false);
-  const [isInitializingGitRepo, setIsInitializingGitRepo] = useState(false);
   const [showAutosaving, setShowAutosaving] = useState(false);
 
   const helpMenuItems = useHelpMenuItems();
@@ -113,39 +101,6 @@ const PageHeader = () => {
     shell.openExternal(url);
     trackEvent('help/create_issue');
   }, [autosavingError]);
-
-  const initGitRepoHandler = async () => {
-    if (!projectRootFolderRef.current) {
-      return;
-    }
-
-    trackEvent('git/initialize');
-    setIsInitializingGitRepo(true);
-
-    try {
-      await initGitRepo({path: projectRootFolderRef.current});
-      trackEvent('git/init');
-    } catch (e: any) {
-      showGitErrorModal('Failed to initialize git repo', e.message);
-      trackEvent('git/error', {action: 'init', reason: e.message});
-      setIsInitializingGitRepo(false);
-      return;
-    }
-
-    monitorGitFolder(projectRootFolderRef.current, store);
-
-    try {
-      await getRepoInfo({path: projectRootFolderRef.current || ''}).then(repo => {
-        dispatch(setRepo(repo));
-        dispatch(setCurrentBranch(repo.currentBranch));
-        setIsInitializingGitRepo(false);
-        dispatch(updateProjectsGitRepo([{path: projectRootFolderRef.current || '', isGitRepo: true}]));
-      });
-    } catch (e: any) {
-      showGitErrorModal('Git repo error', e.message);
-      trackEvent('git/error', {action: 'get_repo_info', reason: e.message});
-    }
-  };
 
   const onClickProjectHandler = () => {
     dispatch(toggleStartProjectPane());
@@ -222,32 +177,10 @@ const PageHeader = () => {
           <S.Divider type="vertical" />
           {activeProject ? (
             <>
-              <S.ActiveProjectButton onClick={onClickProjectHandler}>
+              <S.ActiveProjectButton type="text" onClick={onClickProjectHandler}>
                 <S.MenuOutlinedIcon />
                 <S.ProjectName>{activeProject.name}</S.ProjectName>
               </S.ActiveProjectButton>
-              {hasGitRepo ? (
-                <S.BranchSelectContainer>
-                  <BranchSelect />
-                </S.BranchSelectContainer>
-              ) : (
-                <Tooltip
-                  mouseEnterDelay={TOOLTIP_DELAY}
-                  placement="bottomRight"
-                  title={isGitInstalled ? InitializeGitTooltip : InstallGitTooltip}
-                >
-                  <S.InitButton
-                    disabled={!isGitInstalled}
-                    icon={<Icon name="git" />}
-                    loading={isInitializingGitRepo || gitLoading}
-                    type="text"
-                    size="small"
-                    onClick={initGitRepoHandler}
-                  >
-                    Initialize Git
-                  </S.InitButton>
-                </Tooltip>
-              )}
             </>
           ) : (
             <S.BackProjectsButton type="primary" size="small" onClick={onClickLogoHandler}>
@@ -280,7 +213,6 @@ const PageHeader = () => {
 
         <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
           <K8sVersionSelection />
-          <ClusterControls />
 
           <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={NotificationsTooltip}>
             <Badge count={unseenNotificationsCount} size="small">

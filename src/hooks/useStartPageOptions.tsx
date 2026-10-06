@@ -8,7 +8,7 @@ import {LearnPage, NewProject, SettingsPane} from '@organisms';
 
 import {ProjectsList} from '@molecules';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
 
 export function useStartPageOptions() {
   const options = useMemo(
@@ -24,12 +24,6 @@ export function useStartPageOptions() {
         label: 'Projects',
         content: <ProjectsList />,
         title: 'Projects',
-      },
-      'quick-cluster-mode': {
-        icon: <Icon name="cluster-dashboard" style={{fontSize: '16px'}} />,
-        label: 'Connect to Cluster',
-        content: null,
-        title: '',
       },
       'helm-pane': {
         icon: <Icon name="helm" style={{fontSize: '16px'}} />,

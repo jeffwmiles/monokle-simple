@@ -7,7 +7,8 @@ import styled from 'styled-components';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setStartPageLearnTopic} from '@redux/reducers/ui';
 
-import {Icon, LearnCard, LearnPage as LearnPageContainer} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
+import { LearnCard, LearnPage as LearnPageContainer } from "@components/foundation/walkthrough";
 import {LearnTopicType} from '@shared/models/ui';
 import {openDiscord, openDocumentation, openTutorialVideo, trackEvent} from '@shared/utils';
 
@@ -37,7 +38,7 @@ const LearnPage = () => {
       }}
     >
       <LearnCard
-        description="Configure your resources workspace, whereas it's local, on a Git, a cluster or from scratch."
+        description="Explore local projects, Helm charts, values files and rendered resources."
         icon={<UnorderedListOutlined />}
         title="Explore"
         onClick={() => onLearnCardClickHandler('explore')}
@@ -58,9 +59,9 @@ const LearnPage = () => {
       />
 
       <LearnCard
-        description="Save locally, get into Git (Github, Gitlab), create PRs, deploy to a cluster..."
+        description="Save manifests locally and export rendered Helm resources."
         icon={<CloudUploadOutlined />}
-        title="Publish"
+        title="Save & export"
         onClick={() => onLearnCardClickHandler('publish')}
       />
       {learnTopic && <WalkThroughModal />}

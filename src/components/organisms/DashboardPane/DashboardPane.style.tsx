@@ -9,7 +9,7 @@ import {
 
 import styled, {css} from 'styled-components';
 
-import {TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
 import {Colors} from '@shared/styles/colors';
 
 export const Container = styled.div`

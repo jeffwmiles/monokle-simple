@@ -6,7 +6,7 @@ import {setActiveSettingsPanel} from '@redux/reducers/ui';
 
 import {TitleBarWrapper} from '@components/atoms';
 
-import {TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
 import {SettingsPanel} from '@shared/models/config';
 
 import ValidationSettings from '../ValidationSettings';

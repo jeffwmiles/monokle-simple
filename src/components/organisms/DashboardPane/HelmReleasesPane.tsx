@@ -15,7 +15,7 @@ import {loadClusterHelmReleases} from '@redux/thunks/cluster/loadClusterHelmRele
 
 import AccordionPanel, {InjectedPanelProps} from '@components/atoms/AccordionPanel/AccordionPanel';
 
-import {TitleBar, TitleBarCount} from '@monokle/components';
+import { TitleBar, TitleBarCount } from "@components/foundation/primitives";
 import {Colors} from '@shared/styles';
 import {trackEvent} from '@shared/utils';
 

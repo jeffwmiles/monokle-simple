@@ -1,4 +1,4 @@
-import {monaco} from 'react-monaco-editor';
+import { monaco } from "@components/foundation/monaco";
 
 import {ResourceRef} from '@monokle/validation';
 import {

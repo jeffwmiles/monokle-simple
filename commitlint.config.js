@@ -1,6 +1,6 @@
-module.exports = {
+export default {
   extends: ['@commitlint/config-conventional'],
   rules: {
-    'subject-case': [2, 'never', []],
+    'subject-case': [0],
   },
 };

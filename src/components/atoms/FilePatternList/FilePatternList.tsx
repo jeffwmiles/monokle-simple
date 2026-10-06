@@ -29,7 +29,7 @@ const FilePatternList: React.FC<FilePatternListProps> = props => {
   const [isAddingPattern, setIsAddingPattern] = useState<Boolean>(false);
   const [patternInput, setPatternInput] = useState<string>('');
   const [inputRef, focusInput] = useFocus<InputRef>();
-  const filePatternInputRef = useRef<any>();
+  const filePatternInputRef = useRef<any | undefined>(undefined);
   const isValueNotEmpty = useMemo(() => value.length > 0, [value]);
 
   const dispatch = useAppDispatch();

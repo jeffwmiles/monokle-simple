@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {Checkbox} from 'antd';
-import {CheckboxChangeEvent} from 'antd/lib/checkbox';
+import type {CheckboxChangeEvent} from 'antd';
 
 import {setGitLoading} from '@redux/git';
 import {stageChangedFiles, unstageFiles} from '@redux/git/git.ipc';
@@ -13,7 +13,7 @@ import {usePaneHeight} from '@hooks/usePaneHeight';
 
 import {showGitErrorModal} from '@utils/terminal';
 
-import {TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
 import {GitChangedFile} from '@shared/models/git';
 
 import BottomActions from './BottomActions';

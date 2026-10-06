@@ -3,8 +3,6 @@ import {createAsyncThunk, createNextState} from '@reduxjs/toolkit';
 import micromatch from 'micromatch';
 
 import {currentConfigSelector} from '@redux/appConfig';
-import {setChangedFiles, setGitLoading} from '@redux/git';
-import {getChangedFiles} from '@redux/git/git.ipc';
 import {addPath, getFileEntryForAbsolutePath, reloadFile} from '@redux/services/fileEntry';
 
 import {AppState} from '@shared/models/appState';
@@ -23,7 +21,6 @@ export const multiplePathsChanged = createAsyncThunk<
 >('main/multiplePathsChanged', async (filePaths, thunkAPI: {getState: Function; dispatch: Function}) => {
   const state: RootState = thunkAPI.getState();
   const projectConfig = currentConfigSelector(state);
-  const projectRootFolder = state.config.selectedProjectRootFolder;
 
   const reloadedFilePaths: string[] = [];
 
@@ -42,21 +39,6 @@ export const multiplePathsChanged = createAsyncThunk<
       }
     });
   });
-
-  if (state.git.repo) {
-    if (!state.git.loading) {
-      thunkAPI.dispatch(setGitLoading(true));
-    }
-
-    getChangedFiles({localPath: projectRootFolder || '', fileMap: thunkAPI.getState().main.fileMap})
-      .then(changedFiles => {
-        thunkAPI.dispatch(setChangedFiles(changedFiles));
-        thunkAPI.dispatch(setGitLoading(false));
-      })
-      .catch(() => {
-        thunkAPI.dispatch(setGitLoading(false));
-      });
-  }
 
   return {
     nextMainState,

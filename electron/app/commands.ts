@@ -9,6 +9,8 @@ import type {CommandOptions, CommandResult} from '@shared/models/commands';
 import {NewVersionCode} from '@shared/models/config';
 import type {FileExplorerOptions, FileOptions} from '@shared/models/fileExplorer';
 import type {InterpolateTemplateOptions} from '@shared/models/template';
+import electronStore from '@shared/utils/electronStore';
+import {localHelmArgs} from '@shared/utils/helmOnly';
 
 import autoUpdater from './autoUpdater';
 
@@ -152,12 +154,14 @@ export const runCommand = (options: CommandOptions, event: Electron.IpcMainEvent
   };
 
   try {
-    const child = spawn(options.cmd, options.args, {
+    const executable = electronStore.get('appConfig.binaryPaths')?.helm || 'helm';
+    const args = localHelmArgs(options, executable);
+    const child = spawn(executable, args, {
       env: {
         ...options.env,
         ...process.env,
       },
-      shell: true,
+      shell: false,
       windowsHide: true,
       cwd: options.cwd,
     });
@@ -167,9 +171,14 @@ export const runCommand = (options: CommandOptions, event: Electron.IpcMainEvent
       child.stdin.end();
     }
 
-    child.on('exit', (code, signal) => {
+    child.on('close', (code, signal) => {
       result.exitCode = code;
       result.signal = signal && signal.toString();
+      event.sender.send('command-result', result);
+    });
+
+    child.on('error', error => {
+      result.error = error.message;
       event.sender.send('command-result', result);
     });
 

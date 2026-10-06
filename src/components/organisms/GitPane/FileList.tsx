@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 
 import {Checkbox, Dropdown, List, Modal, Space, Tooltip} from 'antd';
-import {CheckboxChangeEvent} from 'antd/lib/checkbox';
+import type {CheckboxChangeEvent} from 'antd';
 
 import {TOOLTIP_DELAY} from '@constants/constants';
 

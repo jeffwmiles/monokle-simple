@@ -5,7 +5,6 @@ import {AnyAction} from '@reduxjs/toolkit';
 
 import {spawnSync} from 'child_process';
 import {existsSync, mkdirSync, writeFileSync} from 'fs';
-import gitUrlParse from 'git-url-parse';
 import _ from 'lodash';
 import os from 'os';
 import path, {join} from 'path';
@@ -28,22 +27,24 @@ export function extractRepositoryOwnerAndNameFromUrl(pluginUrl: string) {
   if (!isValidRepositoryUrl(pluginUrl)) {
     throw new Error('Currently we support only Github as provider');
   }
-  const parsedURL = gitUrlParse(pluginUrl);
-  if (!parsedURL.owner || !parsedURL.name) {
-    throw new Error('Please enter a valid git URL!');
+  const parsedURL = new URL(pluginUrl);
+  const [owner, repository, pathType, ...branchParts] = parsedURL.pathname
+    .split('/')
+    .filter(Boolean)
+    .map(decodeURIComponent);
+  if (!owner || !repository) {
+    throw new Error('Please enter a valid repository URL!');
   }
-  if (!parsedURL.protocols.includes('https')) {
+  if (parsedURL.protocol !== 'https:' || parsedURL.hostname !== 'github.com') {
     throw new Error('Currently we support only HTTPS protocol!');
   }
-  if (parsedURL.filepathtype && parsedURL.filepathtype !== 'tree') {
+  if (pathType && (pathType !== 'tree' || branchParts.length === 0)) {
     throw new Error('Please navigate main url of the branch!');
   }
   return {
-    repositoryOwner: parsedURL.owner,
-    repositoryName: parsedURL.name,
-    repositoryBranch: !parsedURL.filepathtype
-      ? 'main'
-      : `${parsedURL.ref}${parsedURL.filepath ? `/${parsedURL.filepath}` : ''}`,
+    repositoryOwner: owner,
+    repositoryName: repository.replace(/\.git$/, ''),
+    repositoryBranch: pathType ? branchParts.join('/') : 'main',
   };
 }
 
@@ -77,7 +78,7 @@ export function convertExtensionsToRecord<ExtensionType>(
 }
 
 export const convertRecentFilesToRecentProjects = (dispatch: (action: AnyAction) => void) => {
-  const recentFolders: string[] = electronStore.get('appConfig.recentFolders');
+  const recentFolders = electronStore.get('appConfig.recentFolders');
 
   if (recentFolders && recentFolders.length > 0) {
     recentFolders.forEach((folder: string) => {
@@ -88,7 +89,7 @@ export const convertRecentFilesToRecentProjects = (dispatch: (action: AnyAction)
 };
 
 export const setProjectsRootFolder = (userHomeDir: string) => {
-  const projectsRootPath: string = electronStore.get('appConfig.projectsRootPath');
+  const projectsRootPath = electronStore.get('appConfig.projectsRootPath');
 
   if (!projectsRootPath) {
     electronStore.set('appConfig.projectsRootPath', path.join(userHomeDir, 'Monokle'));

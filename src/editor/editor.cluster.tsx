@@ -84,7 +84,7 @@ const WarnUnsavedChangesModal = (props?: WarnUnsavedChangesModalProps) => {
 
 const useModalComponent = createUseComponentHook(WarnUnsavedChangesModal);
 
-export const useWarnUnsavedChanges = (): [() => boolean, () => JSX.Element] => {
+export const useWarnUnsavedChanges = (): [() => boolean, () => React.JSX.Element] => {
   const [isOpen, setIsOpen] = useState(false);
   const ModalComponent = useModalComponent({open: isOpen, onClose: () => setIsOpen(false)});
 

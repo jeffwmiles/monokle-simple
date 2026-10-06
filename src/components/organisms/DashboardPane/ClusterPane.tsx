@@ -18,7 +18,7 @@ import {InjectedPanelProps} from '@components/atoms/AccordionPanel/AccordionPane
 
 import {useRefSelector} from '@utils/hooks';
 
-import {TitleBar, TitleBarCount} from '@monokle/components';
+import { TitleBar, TitleBarCount } from "@components/foundation/primitives";
 import {DashboardMenu} from '@shared/models/dashboard';
 import {ResourceMeta} from '@shared/models/k8sResource';
 import {ResourceKindHandler} from '@shared/models/resourceKindHandler';

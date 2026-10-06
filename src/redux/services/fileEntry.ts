@@ -62,10 +62,18 @@ interface CreateFileEntryArgs {
   helmChartId?: string;
   extension: string;
   projectConfig: ProjectConfig;
+  stats?: fs.Stats;
 }
 
 // TODO: Maybe text shouldn't be optional
-export function createFileEntry({fileEntryPath, fileMap, helmChartId, extension, projectConfig}: CreateFileEntryArgs) {
+export function createFileEntry({
+  fileEntryPath,
+  fileMap,
+  helmChartId,
+  extension,
+  projectConfig,
+  stats,
+}: CreateFileEntryArgs) {
   const fileEntry: FileEntry = {
     name: path.basename(fileEntryPath),
     filePath: fileEntryPath,
@@ -78,7 +86,7 @@ export function createFileEntry({fileEntryPath, fileMap, helmChartId, extension,
     extension,
   };
 
-  const timestamp = getFileTimestamp(getAbsoluteFilePath(fileEntryPath, fileMap));
+  const timestamp = stats?.mtimeMs ?? getFileTimestamp(getAbsoluteFilePath(fileEntryPath, fileMap));
   if (timestamp) {
     fileEntry.timestamp = timestamp;
   }
@@ -216,10 +224,19 @@ export function readFiles(
     filterGitFolder(files).forEach(file => {
       const filePath = path.join(folder, file);
       const fileEntryPath = filePath.substring(rootFolder.length);
-      const isDir = getFileStats(filePath)?.isDirectory();
+      const stats = getFileStats(filePath);
+      if (!stats) return;
+      const isDir = stats.isDirectory();
       const isExcluded = fileIsExcluded(fileEntryPath, projectConfig);
       let extension = isDir ? '' : path.extname(fileEntryPath);
-      const fileEntry = createFileEntry({fileEntryPath, fileMap, helmChartId: helmChart?.id, extension, projectConfig});
+      const fileEntry = createFileEntry({
+        fileEntryPath,
+        fileMap,
+        helmChartId: helmChart?.id,
+        extension,
+        projectConfig,
+        stats,
+      });
 
       if (helmChart && isHelmTemplateFile(fileEntry.filePath) && !isExcluded) {
         createHelmTemplate(fileEntry, helmChart, fileMap, helmTemplatesMap);

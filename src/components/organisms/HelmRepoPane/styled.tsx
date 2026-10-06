@@ -10,7 +10,7 @@ import {
 
 import styled from 'styled-components';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
 import {Colors} from '@shared/styles';
 
 export const Container = styled.div`

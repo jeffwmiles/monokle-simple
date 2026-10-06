@@ -2,7 +2,7 @@ import {Tabs as AntTabs, Drawer as RawDrawer, Typography} from 'antd';
 
 import styled from 'styled-components';
 
-import {IconButton} from '@monokle/components';
+import { IconButton } from "@components/foundation/primitives";
 import {Colors} from '@shared/styles';
 
 export const Drawer = styled(RawDrawer)`

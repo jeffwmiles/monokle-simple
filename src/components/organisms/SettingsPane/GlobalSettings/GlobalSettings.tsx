@@ -2,8 +2,8 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDebounce} from 'react-use';
 
 import {Button, Checkbox, Form, Input, Select, Tooltip} from 'antd';
-import {CheckboxChangeEvent} from 'antd/lib/checkbox';
-import {useForm} from 'antd/lib/form/Form';
+import type {CheckboxChangeEvent} from 'antd';
+import {Form as AntdForm} from 'antd';
 
 import _ from 'lodash';
 
@@ -23,6 +23,7 @@ import {FileExplorer} from '@components/atoms';
 
 import {useFileExplorer} from '@hooks/useFileExplorer';
 
+import {LIVE_CLUSTERS_ENABLED} from '@shared/constants/capabilities';
 import electronStore from '@shared/utils/electronStore';
 import {openUrlInExternalBrowser} from '@shared/utils/shell';
 
@@ -96,7 +97,7 @@ export const GlobalSettings = () => {
 
   const [currentProjectsRootPath, setCurrentProjectsRootPath] = useState(projectsRootPath);
 
-  const [settingsForm] = useForm();
+  const [settingsForm] = AntdForm.useForm();
 
   const handleToggleEventTracking = (e: CheckboxChangeEvent) => {
     dispatch(toggleEventTracking(e.target.checked));
@@ -199,15 +200,17 @@ export const GlobalSettings = () => {
           </Tooltip>
         </S.Div>
 
-        <S.Div>
-          <S.Span>Cluster</S.Span>
-          <Checkbox checked={shouldAppendServerPath} onChange={e => setShouldAppendServerPath(e.target.checked)}>
-            Append Server Path to Kubectl Proxy
-          </Checkbox>
-          <Checkbox checked={disableClusterValidation} onChange={e => setDisableClusterValidation(e.target.checked)}>
-            Disable validation of cluster resources
-          </Checkbox>
-        </S.Div>
+        {LIVE_CLUSTERS_ENABLED && (
+          <S.Div>
+            <S.Span>Cluster</S.Span>
+            <Checkbox checked={shouldAppendServerPath} onChange={e => setShouldAppendServerPath(e.target.checked)}>
+              Append Server Path to Kubectl Proxy
+            </Checkbox>
+            <Checkbox checked={disableClusterValidation} onChange={e => setDisableClusterValidation(e.target.checked)}>
+              Disable validation of cluster resources
+            </Checkbox>
+          </S.Div>
+        )}
 
         <S.Div>
           <S.Span>Binary Configuration</S.Span>
@@ -216,9 +219,11 @@ export const GlobalSettings = () => {
           </Checkbox>
           {isOverridingBinaryPaths && (
             <>
-              <Form.Item label="kubectl path">
-                <Input value={kubectlBinaryPath} onChange={e => setKubectlBinaryPath(e.target.value)} />
-              </Form.Item>
+              {LIVE_CLUSTERS_ENABLED && (
+                <Form.Item label="kubectl path">
+                  <Input value={kubectlBinaryPath} onChange={e => setKubectlBinaryPath(e.target.value)} />
+                </Form.Item>
+              )}
               <Form.Item label="helm path">
                 <Input value={helmBinaryPath} onChange={e => setHelmBinaryPath(e.target.value)} />
               </Form.Item>

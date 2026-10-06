@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef} from 'react';
-import {monaco} from 'react-monaco-editor';
+import { monaco } from "@components/foundation/monaco";
 
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {openNewResourceWizard, openQuickSearchActionsPopup} from '@redux/reducers/ui';
@@ -12,7 +12,7 @@ import {isInClusterModeSelector, isInPreviewModeSelector} from '@shared/utils/se
 
 function useEditorKeybindings(
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>,
-  hiddenInputRef: React.RefObject<HTMLInputElement>,
+  hiddenInputRef: React.RefObject<HTMLInputElement | null>,
   fileMapRef: React.MutableRefObject<FileMapType>,
   applySelection: () => void,
   diffSelectedResource: () => void

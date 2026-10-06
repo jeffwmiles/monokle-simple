@@ -29,7 +29,7 @@ const FileSystemTree: React.FC = () => {
   const [firstHighlightedFile, firstHighlightedFileRef] = useSelectorWithRef(state =>
     state.main.highlights.find(isFileSelection)
   );
-  const filePathToScrollTo = useRef<string>();
+  const filePathToScrollTo = useRef<string | undefined>(undefined);
 
   const [containerRef, {height: containerHeight}] = useMeasure<HTMLDivElement>();
 

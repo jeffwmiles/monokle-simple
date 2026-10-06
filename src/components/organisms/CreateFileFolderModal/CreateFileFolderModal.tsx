@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 
 import {Form, Input, Modal} from 'antd';
-import {useForm} from 'antd/lib/form/Form';
+import {Form as AntdForm} from 'antd';
 
 import path from 'path';
 
@@ -21,7 +21,7 @@ const CreateFileFolderModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const uiState = useAppSelector(state => state.ui.createFileFolderModal);
 
-  const [createFileFolderForm] = useForm();
+  const [createFileFolderForm] = AntdForm.useForm();
 
   const [inputRef, focus] = useFocus<any>();
 

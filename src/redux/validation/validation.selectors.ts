@@ -24,7 +24,7 @@ import {isDefined} from '@shared/utils/filter';
 import {VALIDATOR} from './validator';
 
 export const useValidationSelector: TypedUseSelectorHook<ValidationState> = (selector, equalifyFn) =>
-  useAppSelector(state => selector(state.validation), equalifyFn);
+  useAppSelector(state => selector(state.validation), typeof equalifyFn === 'function' ? {equalityFn: equalifyFn} : equalifyFn);
 
 /* * * * * * * * * * * * * * * * * *
  * All problems

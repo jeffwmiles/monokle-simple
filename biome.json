@@ -1,0 +1,75 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!!**/node_modules",
+      "!!build",
+      "!!dist",
+      "!!.toolchain",
+      "!!docs",
+      "!!resources",
+      "!!public",
+      "!!coverage",
+      "!!test-results",
+      "!!playwright-report",
+      "!!notarization/afterSignHook.js"
+    ]
+  },
+  "formatter": {"enabled": false},
+  "assist": {"enabled": false},
+  "linter": {
+    "includes": ["**/*.{js,jsx,cjs,mjs,ts,tsx,json,jsonc}", "!package-lock.json"],
+    "rules": {
+      "preset": "none",
+      "correctness": {
+        "noConstAssign": "error",
+        "noInvalidConstructorSuper": "error",
+        "noInvalidBuiltinInstantiation": "error",
+        "noUnreachable": "error",
+        "noUnreachableSuper": "error",
+        "noUnsafeFinally": "error",
+        "noUnusedImports": "warn",
+        "noUnusedVariables": "warn",
+        "useExhaustiveDependencies": "warn",
+        "useHookAtTopLevel": "error",
+        "useJsxKeyInIterable": "warn"
+      },
+      "suspicious": {
+        "noAsyncPromiseExecutor": "error",
+        "noDuplicateCase": "error",
+        "noDuplicateClassMembers": "error",
+        "noDuplicateJsxProps": "error",
+        "noDuplicateObjectKeys": "error",
+        "noFallthroughSwitchClause": "error",
+        "noMisleadingCharacterClass": "error",
+        "noSelfCompare": "error",
+        "noSparseArray": "error"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["src/components/organisms/PaneManager/activities.tsx"],
+      "linter": {
+        "rules": {
+          "correctness": {"useHookAtTopLevel": "warn"}
+        }
+      }
+    },
+    {
+      "includes": ["**/*.d.ts"],
+      "linter": {
+        "rules": {
+          "correctness": {"noUnusedImports": "off", "noUnusedVariables": "off"}
+        }
+      }
+    }
+  ]
+}

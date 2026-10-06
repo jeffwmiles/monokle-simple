@@ -1,6 +1,6 @@
 import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
-import flatten from 'flat';
+import {flatten} from 'flat';
 import {existsSync, mkdirSync} from 'fs';
 import _ from 'lodash';
 import log from 'loglevel';

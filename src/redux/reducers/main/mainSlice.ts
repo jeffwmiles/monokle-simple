@@ -7,7 +7,7 @@ import {v4 as uuidv4} from 'uuid';
 import initialState from '@redux/initialState';
 import {processResourceRefs} from '@redux/parsing/parser.thunks';
 import {RESOURCE_PARSER} from '@redux/parsing/resourceParser';
-import {setAlert} from '@redux/reducers/alert';
+import {hasAlertPayload, setAlert} from '@redux/reducers/alert';
 import {getResourceContentMapFromState, getResourceMetaMapFromState} from '@redux/selectors/resourceMapGetters';
 import {createFileEntry, getFileEntryForAbsolutePath, removePath} from '@redux/services/fileEntry';
 import {HelmChartEventEmitter} from '@redux/services/helm';
@@ -532,7 +532,7 @@ export const mainSlice = createSlice({
     // });
 
     builder.addMatcher(
-      () => true,
+      hasAlertPayload,
       (state, action) => {
         if (action.payload?.alert) {
           const notification: AlertType = action.payload.alert;

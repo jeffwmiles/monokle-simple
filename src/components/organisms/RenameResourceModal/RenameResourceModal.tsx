@@ -43,7 +43,7 @@ const RenameResourceModel: React.FC = () => {
   );
 
   const [form] = Form.useForm();
-  const inputNameRef = useRef<any>();
+  const inputNameRef = useRef<any | undefined>(undefined);
 
   useEffect(() => {
     if (resourceIdentifier && resourceMap) {

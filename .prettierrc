@@ -1,4 +1,6 @@
 {
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "printWidth": 120,
   "importOrder": [
     "^@kubernetes?.+$",
     "^electron?.+$",
@@ -26,9 +28,16 @@
   ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
+  "importOrderSideEffects": false,
+  "importOrderParserPlugins": ["typescript", "jsx"],
   "singleQuote": true,
   "arrowParens": "avoid",
   "bracketSpacing": false,
   "semi": true,
-  "trailingComma": "es5"
+  "trailingComma": "es5",
+  "bracketSameLine": false,
+  "proseWrap": "always",
+  "quoteProps": "as-needed",
+  "tabWidth": 2,
+  "useTabs": false
 }

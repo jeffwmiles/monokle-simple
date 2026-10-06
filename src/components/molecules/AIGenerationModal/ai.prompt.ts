@@ -1,5 +1,5 @@
 import log from 'loglevel';
-import {ChatCompletionRequestMessage} from 'openai';
+import type {ChatCompletionMessageParam} from 'openai/resources/chat/completions';
 
 import {extractK8sResources} from '@redux/services/resource';
 import {VALIDATOR} from '@redux/validation/validator';
@@ -20,7 +20,7 @@ The output should consist exclusively of the YAML code necessary to fulfill the 
 Remember, the output code may span across multiple YAML documents if that's what's needed to incorporate all necessary Kubernetes objects.
 \`\`\`yaml\n`;
 
-const createGenerationPrompt = (payload: {userPrompt: string}): ChatCompletionRequestMessage[] => {
+const createGenerationPrompt = (payload: {userPrompt: string}): ChatCompletionMessageParam[] => {
   const {userPrompt} = payload;
   return [
     {
@@ -61,7 +61,7 @@ const validateGeneratedYaml = async (payload: {
 const createValidationPrompt = async (payload: {
   userPrompt: string;
   generatedYaml: string;
-}): Promise<ChatCompletionRequestMessage[] | undefined> => {
+}): Promise<ChatCompletionMessageParam[] | undefined> => {
   const {userPrompt, generatedYaml} = payload;
 
   const validationErrors = await validateGeneratedYaml({generatedYaml});

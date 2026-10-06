@@ -28,7 +28,7 @@ import {useRefSelector} from '@utils/hooks';
 
 import MonokleKubeshopLogo from '@assets/NewMonokleLogoDark.svg';
 
-import {SearchInput} from '@monokle/components';
+import { SearchInput } from "@components/foundation/primitives";
 import {activeProjectSelector, trackEvent} from '@shared/utils';
 
 import * as S from './StartPageHeader.styled';

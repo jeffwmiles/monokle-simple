@@ -19,7 +19,6 @@ import {HelmPreviewConfiguration, PreviewConfigValuesFileItem} from '@shared/mod
 import {K8sResource} from '@shared/models/k8sResource';
 import {HelmConfigPreview} from '@shared/models/preview';
 import {RootState} from '@shared/models/rootState';
-import {selectKubeconfig} from '@shared/utils/cluster/selectors';
 import {runCommandInMainThread} from '@shared/utils/commands';
 import {trackEvent} from '@shared/utils/telemetry';
 
@@ -49,13 +48,11 @@ export const runPreviewConfiguration = createAsyncThunk<
   const configState = thunkAPI.getState().config;
   const mainState = thunkAPI.getState().main;
   const previewConfigurationMap = configState.projectConfig?.helm?.previewConfigurationMap;
-  const kubeconfig = selectKubeconfig(thunkAPI.getState());
-
-  if (!kubeconfig?.isValid) {
+  if (performDeploy) {
     return createRejectionWithAlert(
       thunkAPI,
       'Helm Configuration Error',
-      `Could not preview due to invalid kubeconfig`
+      'Helm deployment is disabled in this Helm-only build.'
     );
   }
 
@@ -133,7 +130,6 @@ export const runPreviewConfiguration = createAsyncThunk<
     commandId: uuid(),
     cmd: 'helm',
     args: args.splice(1),
-    env: {KUBECONFIG: kubeconfig.path},
   };
 
   if (selectedNamespace) {

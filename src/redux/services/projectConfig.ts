@@ -2,7 +2,7 @@ import {readFileSync, statSync, writeFileSync} from 'fs';
 import _, {isArray, mergeWith} from 'lodash';
 import log from 'loglevel';
 import {sep} from 'path';
-import {AnyAction} from 'redux';
+import type {UnknownAction} from 'redux';
 import invariant from 'tiny-invariant';
 
 import {updateProjectConfig} from '@redux/appConfig';
@@ -163,7 +163,7 @@ export const readProjectConfig = (projectRootPath?: string | null): ProjectConfi
   }
 };
 
-export const updateProjectSettings = (dispatch: (action: AnyAction) => void, projectRootPath?: string | null) => {
+export const updateProjectSettings = (dispatch: (action: UnknownAction) => void, projectRootPath?: string | null) => {
   const projectConfig: ProjectConfig | null = readProjectConfig(projectRootPath);
   if (projectConfig) {
     dispatch(updateProjectConfig({config: projectConfig, fromConfigFile: true}));

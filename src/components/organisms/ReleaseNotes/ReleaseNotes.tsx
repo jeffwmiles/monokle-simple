@@ -89,10 +89,10 @@ const ReleaseNotes: React.FC<ReleaseNotesProps> = ({onClose, singleColumn}) => {
       )}
       {!singleColumn && (
         <S.Actions>
-          <Button type="ghost" onClick={() => openUrlInExternalBrowser(learnMoreUrl)}>
+          <Button ghost onClick={() => openUrlInExternalBrowser(learnMoreUrl)}>
             Learn more
           </Button>
-          <S.ConfirmButton onClick={onClose} type={callToAction ? 'ghost' : 'primary'}>
+          <S.ConfirmButton onClick={onClose} ghost={Boolean(callToAction)} type={callToAction ? 'default' : 'primary'}>
             Got it
           </S.ConfirmButton>
         </S.Actions>

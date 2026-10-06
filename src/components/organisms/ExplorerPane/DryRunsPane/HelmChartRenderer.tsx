@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectFile} from '@redux/reducers/main';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
 import {trackEvent} from '@shared/utils';
 
 import HelmContextMenu from './HelmContextMenu';

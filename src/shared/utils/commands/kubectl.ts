@@ -1,5 +1,3 @@
-import {v4 as uuid} from 'uuid';
-
 import {CommandOptions, KubectlApplyArgs, KubectlEnv} from '@shared/models/commands';
 
 export function createKubectlApplyCommand(
@@ -13,7 +11,7 @@ export function createKubectlApplyCommand(
   }
 
   return {
-    commandId: uuid(),
+    commandId: globalThis.crypto.randomUUID(),
     cmd: 'kubectl',
     args,
     input,

@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import MonacoEditor from 'react-monaco-editor/lib/editor';
+import MonacoEditor from "@components/foundation/monaco";
 import {useMeasure} from 'react-use';
 
 import {Button, Spin, Switch} from 'antd';

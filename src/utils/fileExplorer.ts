@@ -1,4 +1,4 @@
-import {DataNode} from 'antd/lib/tree';
+import type {TreeDataNode as DataNode} from 'antd';
 
 import {orderBy} from 'lodash';
 import path from 'path';

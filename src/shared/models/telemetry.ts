@@ -1,4 +1,4 @@
-import {ipcRenderer} from 'electron';
+import electron from 'electron';
 
 import {machineIdSync} from 'node-machine-id';
 
@@ -19,7 +19,7 @@ export const translateNamespaceToTrackableName = (namespace: string) => {
 
 export const trackEvent = <TEvent extends Event>(eventName: TEvent, payload?: EventMap[TEvent]) => {
   if (isRendererThread()) {
-    ipcRenderer.send('track-event', {eventName, payload});
+    electron.ipcRenderer.send('track-event', {eventName, payload});
   } else {
     const segmentClient = getSegmentClient();
     segmentClient?.track({

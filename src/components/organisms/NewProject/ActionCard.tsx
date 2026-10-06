@@ -9,7 +9,7 @@ type IProps = {
   description?: string;
   disabled?: boolean;
   id?: string;
-  multipleActions?: JSX.Element;
+  multipleActions?: React.JSX.Element;
   onClick?: () => void;
 };
 

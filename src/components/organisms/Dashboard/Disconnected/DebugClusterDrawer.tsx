@@ -51,7 +51,7 @@ export function DebugClusterDrawer({contextId, open, onClose}: Props) {
       contentWrapperStyle={{overflowX: 'auto'}}
       getContainer={false}
       extra={
-        <Tooltip title="Toggle word wrap" placement="bottomLeft" showArrow={false}>
+        <Tooltip title="Toggle word wrap" placement="bottomLeft" arrow={false}>
           <HeaderButton onClick={toggleWordWrap} type="link">
             <ButtonBox $wrap={wordWrap}>
               <TextWrapSvg />

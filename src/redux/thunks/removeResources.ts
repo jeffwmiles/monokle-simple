@@ -1,32 +1,35 @@
-import {createAsyncThunk, createNextState, original} from '@reduxjs/toolkit';
+import {createAsyncThunk, createNextState} from '@reduxjs/toolkit';
 
 import log from 'loglevel';
 
-import {createKubeClientWithSetup} from '@redux/cluster/service/kube-client';
 import {clearSelectionReducer} from '@redux/reducers/main/selectionReducers';
 import {deleteResource, isResourceSelected, removeResourceFromFile} from '@redux/services/resource';
 
-import {getResourceKindHandler} from '@src/kindhandlers';
 
 import {AppState} from '@shared/models/appState';
-import {ResourceIdentifier, isClusterResourceMeta, isLocalResourceMeta} from '@shared/models/k8sResource';
+import {ResourceIdentifier, isLocalResourceMeta} from '@shared/models/k8sResource';
 import {RootState} from '@shared/models/rootState';
 import {isEqual} from '@shared/utils/isEqual';
 
 export const removeResources = createAsyncThunk<
   {nextMainState: AppState; affectedResourceIdentifiers?: ResourceIdentifier[]; error?: Error},
-  ResourceIdentifier[]
->('main/removeResources', async (resourceIdentifiers, thunkAPI: {getState: Function; dispatch: Function}) => {
-  const state: RootState = thunkAPI.getState();
-  let error: Error | undefined;
+  ResourceIdentifier[],
+  {state: Pick<RootState, 'main'>}
+>('main/removeResources', async (resourceIdentifiers, thunkAPI) => {
+  const state = thunkAPI.getState();
+  if (resourceIdentifiers.some(identifier => identifier.storage === 'cluster')) {
+    const error = new Error('Cluster operations are unavailable in this local Helm-only application');
+    log.error(error);
+    return {nextMainState: state.main, affectedResourceIdentifiers: resourceIdentifiers, error};
+  }
 
-  const nextMainState = await createNextState(state.main, async mainState => {
+  const nextMainState = createNextState(state.main, mainState => {
     let deletedCheckedResourcesIdentifiers: ResourceIdentifier[] = [];
 
     for (const resourceIdentifier of resourceIdentifiers) {
       const resourceMeta = mainState.resourceMetaMapByStorage[resourceIdentifier.storage][resourceIdentifier.id];
       if (!resourceMeta) {
-        return original(mainState);
+        continue;
       }
 
       if (mainState.checkedResourceIdentifiers.some(identifier => isEqual(identifier, resourceIdentifier))) {
@@ -42,7 +45,7 @@ export const removeResources = createAsyncThunk<
           resourceMetaMap: mainState.resourceMetaMapByStorage.transient,
           resourceContentMap: mainState.resourceContentMapByStorage.transient,
         });
-        return mainState;
+        continue;
       }
 
       if (isLocalResourceMeta(resourceMeta)) {
@@ -50,35 +53,9 @@ export const removeResources = createAsyncThunk<
           resourceMetaMap: mainState.resourceMetaMapByStorage.local,
           resourceContentMap: mainState.resourceContentMapByStorage.local,
         });
-        return mainState;
+        continue;
       }
 
-      if (mainState.clusterConnection && isClusterResourceMeta(resourceMeta)) {
-        try {
-          const kubeconfig = mainState.clusterConnection.kubeConfigPath;
-          const context = mainState.clusterConnection.context;
-          const kubeClient = await createKubeClientWithSetup({
-            context,
-            kubeconfig,
-            skipHealthCheck: true,
-          });
-
-          const kindHandler = getResourceKindHandler(resourceMeta.kind);
-          if (kindHandler?.deleteResourceInCluster) {
-            await kindHandler.deleteResourceInCluster(kubeClient, resourceMeta);
-            deleteResource(resourceMeta, {
-              resourceMetaMap: mainState.resourceMetaMapByStorage.cluster,
-              resourceContentMap: mainState.resourceContentMapByStorage.cluster,
-            });
-          }
-        } catch (err) {
-          if (err instanceof Error) {
-            error = err;
-          }
-          log.error(err);
-          return original(mainState);
-        }
-      }
     }
 
     mainState.checkedResourceIdentifiers = mainState.checkedResourceIdentifiers.filter(
@@ -86,5 +63,5 @@ export const removeResources = createAsyncThunk<
     );
   });
 
-  return {nextMainState, affectedResourceIdentifiers: resourceIdentifiers, error};
+  return {nextMainState, affectedResourceIdentifiers: resourceIdentifiers};
 });

@@ -38,14 +38,14 @@ const TerminalPane: React.FC<IProps> = props => {
 
   const {height: windowHeight, width: windowWidth} = useWindowSize();
 
-  const terminalRef = useRef<Terminal>();
+  const terminalRef = useRef<Terminal | undefined>(undefined);
   const terminalContainerRef = useRef<HTMLDivElement>(null);
-  const terminalDataRef = useRef<IDisposable>();
+  const terminalDataRef = useRef<IDisposable | undefined>(undefined);
   const incomingDataRef = useRef((_: any, data: string | Uint8Array) => {
     terminalRef.current?.write(data);
   });
-  const terminalResizeRef = useRef<IDisposable>();
-  const addonRef = useRef<FitAddon>();
+  const terminalResizeRef = useRef<IDisposable | undefined>(undefined);
+  const addonRef = useRef<FitAddon | undefined>(undefined);
 
   const rootFilePath = useMemo(() => fileMap[ROOT_FILE_ENTRY]?.filePath, [fileMap]);
 

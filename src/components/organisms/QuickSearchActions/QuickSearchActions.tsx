@@ -207,7 +207,7 @@ const QuickSearchActionsV3: React.FC = () => {
         }
 
         return filteredOpt;
-      }, [] as {value: string; label: JSX.Element}[]);
+      }, [] as {value: string; label: React.JSX.Element}[]);
 
     const kindOptions = allResourceKinds.reduce((filteredOpt, kind) => {
       if (kind.toLowerCase().includes(searchingValue.toLowerCase())) {
@@ -217,7 +217,7 @@ const QuickSearchActionsV3: React.FC = () => {
       }
 
       return filteredOpt;
-    }, [] as {value: string; label: JSX.Element}[]);
+    }, [] as {value: string; label: React.JSX.Element}[]);
 
     const resourceOptions = Object.entries(activeResourceMetaMap)
       .sort((a, b) => {
@@ -260,7 +260,7 @@ const QuickSearchActionsV3: React.FC = () => {
         }
 
         return filteredOpt;
-      }, [] as {value: string; label: JSX.Element}[]);
+      }, [] as {value: string; label: React.JSX.Element}[]);
 
     return [
       {label: LabelMapper['kind'], options: kindOptions},

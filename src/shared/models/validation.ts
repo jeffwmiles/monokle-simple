@@ -1,4 +1,4 @@
-import type {ValidationFiltersValueType} from '@monokle/components';
+import type { ValidationFiltersValueType } from "@components/foundation/validation";
 import type {
   Config,
   PluginMetadataWithConfig,

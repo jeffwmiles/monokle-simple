@@ -1,7 +1,6 @@
 import {isAnyOf} from '@reduxjs/toolkit';
 
 import {readFile} from 'fs/promises';
-import {setDiagnosticsOptions} from 'monaco-yaml';
 import {join} from 'path';
 
 import {setDashboardSelectedResourceId} from '@redux/dashboard';
@@ -18,10 +17,12 @@ import {getResourceSchema, getSchemaForPath} from '@redux/services/schema';
 import {MONACO_YAML_BASE_DIAGNOSTICS_OPTIONS} from '@editor/editor.constants';
 import {getEditor, getEditorType, recreateEditorModel} from '@editor/editor.instance';
 import {editorMounted} from '@editor/editor.slice';
+import {updateYamlLanguageService} from '@editor/yamlLanguageService';
 import {applyResourceEnhancers} from '@editor/enhancers';
 import {helmTemplateFileEnhancer} from '@editor/enhancers/helm/templates';
 import {helmValuesFileEnhancer} from '@editor/enhancers/helm/valuesFile';
 import {ROOT_FILE_ENTRY} from '@shared/constants/fileEntry';
+import {isHelmTemplateFile} from '@shared/utils/helm';
 import {ResourceIdentifier, ResourceMeta} from '@shared/models/k8sResource';
 import {RootState} from '@shared/models/rootState';
 
@@ -87,6 +88,7 @@ export const editorSelectionListener: AppListenerFn = listen => {
 
       if (!resourceIdentifier && selectedFilePath) {
         const fileText = await readFile(join(rootFolderPath, selectedFilePath), 'utf8');
+        editor.updateOptions({readOnly: false});
         recreateEditorModel(editor, fileText);
         enableFileSchemaValidation(selectedFilePath, getState());
 
@@ -109,9 +111,9 @@ const enableResourceSchemaValidation = (resourceMeta: ResourceMeta, state: RootS
   }
 
   const resourceSchema = getResourceSchema(resourceMeta, k8sVersion, userDataDir);
-  const validate = resourceSchema && !isKustomizationPatch(resourceMeta) && isSupportedResource(resourceMeta);
+  const validate = Boolean(resourceSchema) && !isKustomizationPatch(resourceMeta) && isSupportedResource(resourceMeta);
 
-  setDiagnosticsOptions({
+  updateYamlLanguageService({
     ...MONACO_YAML_BASE_DIAGNOSTICS_OPTIONS,
     validate,
     isKubernetes: true,
@@ -127,9 +129,9 @@ const enableResourceSchemaValidation = (resourceMeta: ResourceMeta, state: RootS
 
 const enableFileSchemaValidation = (filePath: string, state: RootState) => {
   const fileSchema = getSchemaForPath(filePath, state.main.fileMap);
-  const validate = fileSchema !== undefined;
+  const validate = fileSchema !== undefined || (/\.ya?ml$/i.test(filePath) && !isHelmTemplateFile(filePath));
 
-  setDiagnosticsOptions({
+  updateYamlLanguageService({
     ...MONACO_YAML_BASE_DIAGNOSTICS_OPTIONS,
     validate,
     isKubernetes: true,

@@ -1,10 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
-import log from 'loglevel';
-
 import {currentConfigSelector} from '@redux/appConfig';
-import {setChangedFiles, setGitLoading, setRepo} from '@redux/git';
-import {getChangedFiles, getRepoInfo, isFolderGitRepo} from '@redux/git/git.ipc';
 import {abortAllRunningRefsProcessing} from '@redux/parsing/parser.thunks';
 import {SetRootFolderArgs, SetRootFolderPayload} from '@redux/reducers/main';
 import {disconnectFromCluster} from '@redux/services/clusterResourceWatcher';
@@ -15,7 +11,6 @@ import {createRejectionWithAlert} from '@redux/thunks/utils';
 import {abortAllRunningValidation} from '@redux/validation/validation.thunks';
 
 import {getFileStats} from '@utils/files';
-import {showGitErrorModal} from '@utils/terminal';
 
 import {AlertEnum} from '@shared/models/alert';
 import {AppDispatch} from '@shared/models/appDispatch';
@@ -112,45 +107,6 @@ export const setRootFolder = createAsyncThunk<
     silent: true,
   };
 
-  let isGitRepo: boolean;
-
-  try {
-    isGitRepo = await isFolderGitRepo({path: rootFolder});
-  } catch (err) {
-    isGitRepo = false;
-  }
-
-  if (isGitRepo) {
-    thunkAPI.dispatch(setGitLoading(true));
-
-    Promise.allSettled([getRepoInfo({path: rootFolder}), getChangedFiles({localPath: rootFolder, fileMap})]).then(
-      ([repo, changedFiles]) => {
-        if (repo.status === 'rejected' || changedFiles.status === 'rejected') {
-          const errorMessage =
-            'reason' in repo ? repo.reason : 'reason' in changedFiles ? changedFiles.reason : undefined;
-          log.error(errorMessage);
-          showGitErrorModal('Git error', errorMessage);
-          thunkAPI.dispatch(setGitLoading(false));
-          return;
-        }
-
-        if (typeof repo.value !== 'object') {
-          thunkAPI.dispatch(setRepo(undefined));
-          thunkAPI.dispatch(setGitLoading(false));
-          return;
-        }
-
-        thunkAPI.dispatch(setRepo(repo.value));
-        thunkAPI.dispatch(setChangedFiles(changedFiles.value));
-        thunkAPI.dispatch(setGitLoading(false));
-
-        if (repo.value.remoteRepo.authRequired) {
-          showGitErrorModal('Authentication failed', undefined, `git remote show origin`, thunkAPI.dispatch);
-        }
-      }
-    );
-  }
-
   const endTime = new Date().getTime();
 
   trackEvent('app_start/open_project', {
@@ -175,7 +131,7 @@ export const setRootFolder = createAsyncThunk<
     isScanExcludesUpdated: 'applied',
     isScanIncludesUpdated: 'applied',
     alert: rootFolder ? generatedAlert : undefined,
-    isGitRepo,
+    isGitRepo: false,
     isReload,
   };
 });

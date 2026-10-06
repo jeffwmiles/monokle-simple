@@ -1,7 +1,7 @@
 import {useMeasure} from 'react-use';
 
 import {Image} from 'antd';
-import Link from 'antd/lib/typography/Link';
+import {Typography as AntdTypography} from 'antd';
 
 import {ReloadOutlined} from '@ant-design/icons';
 
@@ -19,11 +19,14 @@ import {useRefSelector} from '@utils/hooks';
 
 import ValidationFigure from '@assets/NewValidationFigure.svg';
 
-import {Icon, TitleBar, ValidationOverview} from '@monokle/components';
+import { Icon, TitleBar } from "@components/foundation/primitives";
+import { ValidationOverview } from "@components/foundation/validation";
 import {trackEvent} from '@shared/utils';
 import {isInClusterModeSelector, isInPreviewModeSelector} from '@shared/utils/selectors';
 
 import * as S from './ValidationPane.styled';
+
+const Link = AntdTypography.Link;
 
 const ValidationPane: React.FC = () => {
   const dispatch = useAppDispatch();

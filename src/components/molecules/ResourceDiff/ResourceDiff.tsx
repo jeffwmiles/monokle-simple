@@ -1,5 +1,5 @@
 import {useMemo, useRef, useState} from 'react';
-import {MonacoDiffEditor} from 'react-monaco-editor';
+import { MonacoDiffEditor } from "@components/foundation/monaco";
 import {useMeasure} from 'react-use';
 
 import {Button, Switch} from 'antd';
@@ -23,7 +23,7 @@ import {KUBESHOP_MONACO_THEME} from '@utils/monaco';
 import {removeIgnoredPathsFromResourceObject} from '@utils/resources';
 import {stringifyK8sResource} from '@utils/yaml';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
 import {K8sResource} from '@shared/models/k8sResource';
 import {isInClusterModeSelector} from '@shared/utils/selectors';
 

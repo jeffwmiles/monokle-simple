@@ -20,8 +20,6 @@ import {isInClusterModeSelector} from '@shared/utils/selectors';
 
 import HelmRepoModal from '../HelmRepoModal/HelmRepoModal';
 
-const GitCloneModal = React.lazy(() => import('@organisms/GitCloneModal'));
-
 const AboutModal = React.lazy(() => import('@organisms/AboutModal'));
 const ChangeFiltersConfirmModal = React.lazy(() => import('@molecules/ChangeFiltersConfirmModal'));
 const ClusterResourceDiffModal = React.lazy(() => import('@organisms/ClusterResourceDiffModal'));
@@ -56,7 +54,6 @@ const GlobalModals = () => {
   const isCreateProjectModalVisible = useAppSelector(state => state.ui.createProjectModal.isOpen);
   const isFileCompareModalVisible = useAppSelector(state => state.ui.fileCompareModal.isVisible);
   const isFiltersPresetModalVisible = useAppSelector(state => state.ui.filtersPresetModal?.isOpen);
-  const isGitCloneModalVisible = useAppSelector(state => state.git.gitCloneModal.open);
   const isInClusterMode = useAppSelector(isInClusterModeSelector);
   const isNewResourceWizardVisible = useAppSelector(state => state.ui.newResourceWizard.isOpen);
   const isQuickSearchActionsVisible = useAppSelector(state => state.ui.quickSearchActionsPopup.isOpen);
@@ -99,7 +96,9 @@ const GlobalModals = () => {
 
       const lastSeenReleaseNotesVersion = electronStore.get('appConfig.lastSeenReleaseNotesVersion');
 
-      const nextMajorReleaseVersion = semver.inc(lastSeenReleaseNotesVersion, 'minor');
+      const nextMajorReleaseVersion = lastSeenReleaseNotesVersion
+        ? semver.inc(lastSeenReleaseNotesVersion, 'minor')
+        : null;
 
       // new user
       if (!semver.valid(lastSeenReleaseNotesVersion)) {
@@ -162,7 +161,6 @@ const GlobalModals = () => {
         {isCreateFileFolderModalVisible && <CreateFileFolderModal />}
         {isCreateProjectModalVisible && <CreateProjectModal />}
         {isFiltersPresetModalVisible && <FiltersPresetModal />}
-        {isGitCloneModalVisible && <GitCloneModal />}
         {isKeyboardShortcutsVisible && <KeyboardShortcuts />}
         {isLocalResourceDiffModalVisible && <LocalResourceDiffModal />}
         {isNewResourceWizardVisible && <NewResourceWizard />}

@@ -3,15 +3,14 @@ import {CloseOutlined, SettingOutlined} from '@ant-design/icons';
 
 import {size} from 'lodash';
 
-import {FileExplorerTabTooltip, SettingsTooltip, TerminalPaneTooltip} from '@constants/tooltips';
+import {FileExplorerTabTooltip, SettingsTooltip} from '@constants/tooltips';
 
 import {activeProjectSelector} from '@redux/appConfig';
 import {useAppSelector} from '@redux/hooks';
 import {problemsSelector, useValidationSelector} from '@redux/validation/validation.selectors';
 
-import {BottomPaneManager, DashboardPane, GitPane} from '@organisms';
-
-import {ActivityType, Icon} from '@monokle/components';
+import {ActivityType} from '@components/foundation/layout';
+import { Icon } from "@components/foundation/primitives";
 import {LeftMenuBottomSelectionType, LeftMenuSelectionType} from '@shared/models/ui';
 import {isInClusterModeSelector} from '@shared/utils/selectors';
 
@@ -73,31 +72,6 @@ export const activities: ActivityType<LeftMenuSelectionType>[] = [
     useBadge: () => undefined,
   },
   {
-    type: 'panel',
-    name: 'git',
-    tooltip: 'View Git operations',
-    icon: () => {
-      const changedFiles = useAppSelector(state => state.git.changedFiles);
-
-      return <Icon name="git-ops" style={{fontSize: '18px', marginTop: changedFiles.length ? '0px' : '4px'}} />;
-    },
-    component: <GitPane />,
-    useBadge: () => {
-      const changedFiles = useAppSelector(state => state.git.changedFiles);
-
-      return {count: changedFiles.length, size: 'small'};
-    },
-    isVisible: () => Boolean(useAppSelector(activeProjectSelector)) && !useAppSelector(isInClusterModeSelector),
-  },
-  {
-    type: 'panel',
-    name: 'dashboard',
-    tooltip: 'View cluster dashboard',
-    icon: () => <Icon name="cluster-dashboard" style={{fontSize: '18px', marginTop: 4}} />,
-    component: <DashboardPane />,
-    useBadge: () => undefined,
-  },
-  {
     type: 'fullscreen',
     name: 'settings',
     tooltip: <SettingsTooltip />,
@@ -124,14 +98,4 @@ export const activities: ActivityType<LeftMenuSelectionType>[] = [
   },
 ];
 
-export const extraActivities: ActivityType<LeftMenuBottomSelectionType>[] = [
-  {
-    type: 'fullscreen',
-    name: 'terminal',
-    tooltip: <TerminalPaneTooltip />,
-    icon: () => <Icon name="terminal" style={{fontSize: 16}} />,
-    component: <BottomPaneManager />,
-    useBadge: () => undefined,
-    isVisible: () => Boolean(useAppSelector(activeProjectSelector)),
-  },
-];
+export const extraActivities: ActivityType<LeftMenuBottomSelectionType>[] = [];

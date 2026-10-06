@@ -13,10 +13,10 @@ import * as S from './TerminalTab.styled';
 export const TerminalTab = ({resourceId}: {resourceId: string}) => {
   const clusterConnection = useAppSelector(state => state.main.clusterConnection);
   const terminalContainerRef = useRef<HTMLDivElement>(null);
-  const terminalRef = useRef<Terminal>();
+  const terminalRef = useRef<Terminal | undefined>(undefined);
   const webContentsId = useAppSelector(state => state.terminal.webContentsId);
 
-  const addonRef = useRef<FitAddon>();
+  const addonRef = useRef<FitAddon | undefined>(undefined);
   const resource = useResource({id: resourceId, storage: 'cluster'});
 
   useEffect(() => {

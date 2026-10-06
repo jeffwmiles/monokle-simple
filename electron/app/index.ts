@@ -41,15 +41,16 @@ initTelemetry(machineIdSync(), disableEventTracking, app);
 fixPath();
 
 if (process.env.MONOKLE_RUN_AS_NODE) {
-  yargs(hideBin(process.argv)).command(
-    '$0',
-    'opens current directory',
-    () => {},
-    async argv => {
-      const {executedFrom} = argv;
-      openApplication(executedFrom as string);
-    }
-  ).argv;
+  yargs(hideBin(process.argv))
+    .option('executedFrom', {type: 'string'})
+    .command('$0', 'opens current directory', () => {}, async argv => {
+      await openApplication(argv.executedFrom);
+    })
+    .parseAsync()
+    .catch(error => {
+      console.error(error);
+      process.exitCode = 1;
+    });
 } else {
   openApplication();
 }

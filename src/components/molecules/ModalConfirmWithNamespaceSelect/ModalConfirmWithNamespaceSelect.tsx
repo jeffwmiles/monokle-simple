@@ -1,36 +1,30 @@
-import * as k8s from '@kubernetes/client-node';
-
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Input, Modal, Radio, Select} from 'antd';
 
-import {createKubeClientWithSetup} from '@redux/cluster/service/kube-client';
-import {useAppSelector} from '@redux/hooks';
 
 import {useTargetClusterNamespaces} from '@hooks/useTargetClusterNamespaces';
 
 import {getDefaultNamespaceForApply} from '@utils/resources';
 
 import {ResourceMeta} from '@shared/models/k8sResource';
-import {selectKubeconfig} from '@shared/utils/cluster/selectors';
 
 import * as S from './ModalConfirmWithNamespaceSelect.styled';
 
 interface IProps {
   isVisible: boolean;
   resourceMetaList?: ResourceMeta[];
-  title: string | JSX.Element;
+  title: string | React.JSX.Element;
   onOk: (namespace?: {name: string; new: boolean}) => void;
   onCancel: () => void;
 }
 
 const ModalConfirmWithNamespaceSelect: React.FC<IProps> = props => {
-  const {isVisible, resourceMetaList = [], title, onCancel, onOk} = props;
+  const {isVisible, resourceMetaList = [], title, onCancel} = props;
 
   const [namespaces] = useTargetClusterNamespaces();
 
   const defaultClusterNamespace = namespaces && namespaces.length ? namespaces[0] : 'default';
-  const kubeconfig = useAppSelector(selectKubeconfig);
 
   const {defaultNamespace, defaultOption} = getDefaultNamespaceForApply(resourceMetaList, defaultClusterNamespace);
 
@@ -40,40 +34,8 @@ const ModalConfirmWithNamespaceSelect: React.FC<IProps> = props => {
   const [selectedOption, setSelectedOption] = useState<'existing' | 'create' | 'none'>();
 
   const onClickOk = useCallback(() => {
-    if (!kubeconfig?.isValid) {
-      return setErrorMessage('Cannot use invalid kubeconfig');
-    }
-
-    if (selectedOption === 'create') {
-      if (!createNamespaceName) {
-        setErrorMessage('Namespace name must not be empty!');
-        return;
-      }
-
-      (async () => {
-        try {
-          const kc = await createKubeClientWithSetup({
-            context: kubeconfig.currentContext,
-            kubeconfig: kubeconfig.path,
-            skipHealthCheck: true,
-          });
-          const k8sCoreV1Api = kc.makeApiClient(k8s.CoreV1Api);
-          await k8sCoreV1Api.createNamespace({metadata: {name: createNamespaceName}});
-          onOk({name: createNamespaceName, new: true});
-        } catch (err: any) {
-          if (err.statusCode === 409) {
-            setErrorMessage('Namespace already exists in the cluster!');
-          } else {
-            setErrorMessage(err.message);
-          }
-        }
-      })();
-    } else if (selectedOption === 'existing') {
-      onOk({name: selectedNamespace, new: false});
-    } else if (!selectedOption || selectedOption === 'none') {
-      onOk();
-    }
-  }, [selectedOption, createNamespaceName, kubeconfig, onOk, selectedNamespace]);
+    setErrorMessage('Cluster operations are unavailable in this local Helm-only application');
+  }, []);
 
   const clusterScopedResourcesCount = useMemo(
     () => resourceMetaList.filter(r => r.isClusterScoped).length,

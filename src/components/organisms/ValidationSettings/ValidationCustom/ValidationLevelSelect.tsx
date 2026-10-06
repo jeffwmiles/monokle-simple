@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import {TOOLTIP_DELAY} from '@constants/constants';
 import {ValidationLevelSelectTooltip} from '@constants/tooltips';
 
-import {ProblemIcon} from '@monokle/components';
+import { ProblemIcon } from "@components/foundation/validation";
 import {Colors} from '@shared/styles/colors';
 
 import {Rule} from './ValidationCustomTable';

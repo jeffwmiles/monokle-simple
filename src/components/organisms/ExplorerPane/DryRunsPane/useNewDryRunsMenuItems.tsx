@@ -6,9 +6,8 @@ import styled from 'styled-components';
 
 import {useAppDispatch} from '@redux/hooks';
 import {openPreviewConfigurationEditor} from '@redux/reducers/main';
-import {openSaveEditCommandModal} from '@redux/reducers/ui';
 
-import {Colors} from '@monokle/components';
+import { Colors } from "@components/foundation/primitives";
 
 export function useNewDryRunsMenuItems() {
   const dispatch = useAppDispatch();
@@ -20,13 +19,6 @@ export function useNewDryRunsMenuItems() {
         label: <MenuItem>Dry run Configuration</MenuItem>,
         onClick: () => {
           dispatch(openPreviewConfigurationEditor({}));
-        },
-      },
-      {
-        key: 'from-template',
-        label: <MenuItem>Command Dry run</MenuItem>,
-        onClick: () => {
-          dispatch(openSaveEditCommandModal({}));
         },
       },
     ],

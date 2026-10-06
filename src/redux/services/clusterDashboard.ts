@@ -15,9 +15,8 @@ let lastKubeletVersion: string | undefined;
 export const getClusterUtilization = async (kubeconfig: string, context: string): Promise<NodeMetric[]> => {
   const kc = await createKubeClientWithSetup({context, kubeconfig, skipHealthCheck: true});
 
-  const metricClient = new k8s.Metrics(kc); // No VoidAuth available - might need workaround.
+  const metricClient = new k8s.Metrics(kc);
   const k8sApiClient = kc.makeApiClient(k8s.CoreV1Api);
-  k8sApiClient.setDefaultAuthentication(new k8s.VoidAuth());
 
   const nodeMetrics: k8s.NodeMetric[] = (await metricClient.getNodeMetrics()).items;
   const nodes = await k8s.topNodes(k8sApiClient);

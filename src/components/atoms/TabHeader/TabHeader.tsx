@@ -7,7 +7,7 @@ interface TabHeaderProps {
   children: React.ReactNode;
 }
 
-const TabHeader = ({children, icon}: TabHeaderProps): JSX.Element => {
+const TabHeader = ({children, icon}: TabHeaderProps): React.JSX.Element => {
   return (
     <S.Wrapper>
       {icon && icon}

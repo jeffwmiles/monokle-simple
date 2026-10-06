@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 
 import {Button, Form, Input, Modal} from 'antd';
-import {useForm} from 'antd/lib/form/Form';
+import {Form as AntdForm} from 'antd';
 
 import path from 'path';
 
@@ -20,7 +20,7 @@ const RenameEntityModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const uiState = useAppSelector(state => state.ui.renameEntityModal);
 
-  const [renameEntityForm] = useForm();
+  const [renameEntityForm] = AntdForm.useForm();
 
   const [inputRef, focus] = useFocus<any>();
 

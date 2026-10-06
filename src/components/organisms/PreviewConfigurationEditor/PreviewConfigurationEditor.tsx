@@ -1,12 +1,12 @@
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
-import {Button, Input, Select} from 'antd';
+import {Button, Input} from 'antd';
 
 import _, {cloneDeep} from 'lodash';
 import {v4 as uuidv4} from 'uuid';
 
-import {HELM_INSTALL_OPTIONS_DOCS_URL, HELM_TEMPLATE_OPTIONS_DOCS_URL} from '@constants/constants';
-import {helmInstallOptions, helmTemplateOptions} from '@constants/helmOptions';
+import {HELM_TEMPLATE_OPTIONS_DOCS_URL} from '@constants/constants';
+import {helmTemplateOptions} from '@constants/helmOptions';
 
 import {updateProjectConfig} from '@redux/appConfig';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
@@ -28,9 +28,6 @@ import * as S from './styled';
 
 const PreviewConfigurationEditor = () => {
   const dispatch = useAppDispatch();
-  const helmPreviewMode = useAppSelector(
-    state => state.config.projectConfig?.settings?.helmPreviewMode || state.config.settings.helmPreviewMode
-  );
   const helmValuesMap = useAppSelector(state => state.main.helmValuesMap);
   const previewConfigurationMap = useAppSelector(
     state => state.config.projectConfig?.helm?.previewConfigurationMap || {}
@@ -112,25 +109,7 @@ const PreviewConfigurationEditor = () => {
 
   const [helmOptions, setHelmOptions] = useState<Record<string, string | null>>(previewConfiguration?.options || {});
 
-  const [helmCommand, setHelmCommand] = useState<'template' | 'install'>(() => {
-    if (previewConfiguration) {
-      return previewConfiguration.command;
-    }
-    if (helmPreviewMode) {
-      return helmPreviewMode;
-    }
-    return 'template';
-  });
-
-  const keyValueInputSchema = useMemo(
-    () => (helmCommand === 'template' ? helmTemplateOptions : helmInstallOptions),
-    [helmCommand]
-  );
-
-  const helmOptionsDocsUrl = useMemo(
-    () => (helmCommand === 'template' ? HELM_TEMPLATE_OPTIONS_DOCS_URL : HELM_INSTALL_OPTIONS_DOCS_URL),
-    [helmCommand]
-  );
+  const helmCommand = 'template';
 
   const onClose = useCallback(() => {
     dispatch(closePreviewConfigurationEditor());
@@ -216,19 +195,12 @@ const PreviewConfigurationEditor = () => {
             <ValuesFilesList itemMap={valuesFileItemMap} onChange={itemMap => setValuesFileItemMap(itemMap)} />
           </S.Field>
           <S.Field>
-            <S.Label>Select which helm command to use for this Dry-run:</S.Label>
-            <Select value={helmCommand} onChange={setHelmCommand} style={{width: 150}}>
-              <Select.Option value="template">Template</Select.Option>
-              <Select.Option value="install">Install</Select.Option>
-            </Select>
-          </S.Field>
-          <S.Field>
             <KeyValueInput
               label="Specify options:"
               value={helmOptions}
-              schema={keyValueInputSchema}
+              schema={helmTemplateOptions}
               availableValuesByKey={{}}
-              docsUrl={helmOptionsDocsUrl}
+              docsUrl={HELM_TEMPLATE_OPTIONS_DOCS_URL}
               onChange={setHelmOptions}
             />
           </S.Field>

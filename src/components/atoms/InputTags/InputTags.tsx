@@ -29,7 +29,7 @@ const InputTags: React.FC<IProps> = props => {
     }
 
     if (tags.includes(inputValue)) {
-      message.warn(warningMessage || 'Tag already exists!');
+      message.warning(warningMessage || 'Tag already exists!');
       return;
     }
 

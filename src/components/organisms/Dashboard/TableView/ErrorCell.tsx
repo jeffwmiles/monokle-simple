@@ -8,7 +8,7 @@ import {setMonacoEditor} from '@redux/reducers/ui';
 
 import {useValidationLevel} from '@hooks/useValidationLevel';
 
-import {ProblemIcon, ValidationPopover} from '@monokle/components';
+import { ProblemIcon, ValidationPopover } from "@components/foundation/validation";
 import {ValidationResult, getResourceLocation} from '@monokle/validation';
 import {MonacoRange} from '@shared/models/ui';
 

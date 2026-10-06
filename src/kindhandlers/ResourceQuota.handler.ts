@@ -1,8 +1,9 @@
-import * as k8s from '@kubernetes/client-node';
+import {disabledClusterOperations} from '@src/kindhandlers/common/disabledClusterOperations';
+
 
 import navSectionNames from '@constants/navSectionNames';
 
-import {ResourceMeta} from '@shared/models/k8sResource';
+
 import {ResourceKindHandler} from '@shared/models/resourceKindHandler';
 
 const ResourceQuotaHandler: ResourceKindHandler = {
@@ -13,24 +14,9 @@ const ResourceQuotaHandler: ResourceKindHandler = {
   clusterApiVersion: 'v1',
   validationSchemaPrefix: 'io.k8s.api.core.v1',
   isCustom: false,
-  getResourceFromCluster(kubeconfig: k8s.KubeConfig, resource: ResourceMeta): Promise<any> {
-    const k8sCoreV1Api = kubeconfig.makeApiClient(k8s.CoreV1Api);
-    k8sCoreV1Api.setDefaultAuthentication(new k8s.VoidAuth());
-    return k8sCoreV1Api.readNamespacedResourceQuota(resource.name, resource.namespace || 'default', 'true');
-  },
-  async listResourcesInCluster(kubeconfig: k8s.KubeConfig, {namespace}) {
-    const k8sCoreV1Api = kubeconfig.makeApiClient(k8s.CoreV1Api);
-    k8sCoreV1Api.setDefaultAuthentication(new k8s.VoidAuth());
-    const response = namespace
-      ? await k8sCoreV1Api.listNamespacedResourceQuota(namespace)
-      : await k8sCoreV1Api.listResourceQuotaForAllNamespaces();
-    return response.body.items;
-  },
-  async deleteResourceInCluster(kubeconfig: k8s.KubeConfig, resource: ResourceMeta) {
-    const k8sCoreV1Api = kubeconfig.makeApiClient(k8s.CoreV1Api);
-    k8sCoreV1Api.setDefaultAuthentication(new k8s.VoidAuth());
-    await k8sCoreV1Api.deleteNamespacedResourceQuota(resource.name, resource.namespace || 'default');
-  },
+  ...disabledClusterOperations,
+  
+  
   helpLink: 'https://kubernetes.io/docs/concepts/policy/resource-quotas/',
 };
 

@@ -18,7 +18,7 @@ import {useValidationLevel} from '@hooks/useValidationLevel';
 
 import {useRefSelector} from '@utils/hooks';
 
-import {ValidationPopover} from '@monokle/components';
+import { ValidationPopover } from "@components/foundation/validation";
 import {ValidationResult, getResourceId, getResourceLocation} from '@monokle/validation';
 import {ResourceMeta} from '@shared/models/k8sResource';
 import {MonacoRange} from '@shared/models/ui';

@@ -2,7 +2,7 @@ import {ipcRenderer} from 'electron';
 
 import {debounce, pick} from 'lodash';
 import log from 'loglevel';
-import {AnyAction} from 'redux';
+import {isAction} from 'redux';
 
 import {ROOT_FILE_ENTRY} from '@shared/constants/fileEntry';
 import {RootState} from '@shared/models/rootState';
@@ -13,7 +13,11 @@ import store from './store';
 
 const storeSubscribers: number[] = [];
 
-ipcRenderer.on('redux-dispatch', (_, action: AnyAction) => {
+ipcRenderer.on('redux-dispatch', (_, action: unknown) => {
+  if (!isAction(action)) {
+    log.error('Rejected invalid Redux action received over IPC');
+    return;
+  }
   store.dispatch(action);
 });
 

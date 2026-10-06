@@ -2,7 +2,7 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 
 export function useDelayedUnmount(isVisible: boolean, delayMilliseconds: number) {
   const [isMounted, setIsMounted] = useState(true);
-  const timeoutIdRef = useRef<number>();
+  const timeoutIdRef = useRef<number | undefined>(undefined);
 
   const shouldDelayUnmount = useMemo(() => !isVisible && isMounted, [isVisible, isMounted]);
 

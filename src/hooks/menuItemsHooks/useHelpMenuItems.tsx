@@ -109,7 +109,7 @@ export function useHelpMenuItems() {
   return items;
 }
 
-const renderMenuItem = (label: string, icon: JSX.Element, border?: boolean, cursorPointer?: boolean) => (
+const renderMenuItem = (label: string, icon: React.JSX.Element, border?: boolean, cursorPointer?: boolean) => (
   <MenuItem style={{cursor: cursorPointer ? 'pointer' : 'default'}} $border={border}>
     {icon && <MenuItemIcon>{icon}</MenuItemIcon>}
     <MenuItemLabel>{label}</MenuItemLabel>

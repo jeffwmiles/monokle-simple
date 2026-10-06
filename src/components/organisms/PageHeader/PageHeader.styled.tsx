@@ -137,9 +137,7 @@ export const Divider = styled(RawDivider)`
   top: 0;
 `;
 
-export const ActiveProjectButton = styled(RawButton).attrs({
-  type: 'text',
-})`
+export const ActiveProjectButton = styled(RawButton)`
   display: flex;
   align-items: center;
   padding: 0px;

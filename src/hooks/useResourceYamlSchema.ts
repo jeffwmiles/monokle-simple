@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 
-import {setDiagnosticsOptions} from 'monaco-yaml';
+import {updateYamlLanguageService} from '@editor/yamlLanguageService';
 
 import {isKustomizationPatch} from '@redux/services/kustomize';
 import {isSupportedResource} from '@redux/services/resource';
@@ -19,8 +19,9 @@ function useResourceYamlSchema(
 ) {
   useEffect(() => {
     if (!selectedResourceRef?.current && !selectedPath) {
-      setDiagnosticsOptions({
+      updateYamlLanguageService({
         validate: false,
+        schemas: [],
       });
       return;
     }
@@ -31,7 +32,7 @@ function useResourceYamlSchema(
     if (selectedResourceRef?.current) {
       resourceSchema = getResourceSchema(selectedResourceRef.current, k8sVersion, userDataDir);
       validate =
-        resourceSchema &&
+        Boolean(resourceSchema) &&
         !isKustomizationPatch(selectedResourceRef.current) &&
         isSupportedResource(selectedResourceRef.current);
     } else if (selectedPath && fileMapRef?.current) {
@@ -39,13 +40,13 @@ function useResourceYamlSchema(
       validate = resourceSchema !== undefined;
     }
 
-    setDiagnosticsOptions({
+    updateYamlLanguageService({
       validate,
       enableSchemaRequest: true,
       hover: true,
       completion: true,
       isKubernetes: Boolean(selectedResourceRef?.current),
-      format: true,
+      format: {enable: true},
       schemas: [
         {
           uri: 'http://monokle/k8s.json', // id of the first schema

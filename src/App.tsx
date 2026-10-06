@@ -1,16 +1,13 @@
 import {ipcRenderer} from 'electron';
 
 import React, {useCallback, useEffect} from 'react';
-import {useEffectOnce, useMount} from 'react-use';
+import {useEffectOnce} from 'react-use';
 
 import lodash from 'lodash';
 import log from 'loglevel';
 import path from 'path';
 
-import {activeProjectSelector, setKubeConfig, setLoadingProject} from '@redux/appConfig';
-import {startWatchingKubeconfig} from '@redux/cluster/listeners/kubeconfig';
-import {setIsGitInstalled} from '@redux/git';
-import {isGitInstalled} from '@redux/git/git.ipc';
+import {activeProjectSelector, setLoadingProject} from '@redux/appConfig';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setAlert} from '@redux/reducers/alert';
 import {clearNotifications, closePreviewConfigurationEditor} from '@redux/reducers/main';
@@ -87,12 +84,6 @@ const App = () => {
   );
 
   useEffect(() => {
-    const kubeconfig = electronStore.get('appConfig.kubeConfig');
-    dispatch(setKubeConfig({path: kubeconfig}));
-    dispatch(startWatchingKubeconfig());
-  }, [dispatch]);
-
-  useEffect(() => {
     ipcRenderer.on('executed-from', onExecutedFrom);
     return () => {
       ipcRenderer.removeListener('executed-from', onExecutedFrom);
@@ -105,19 +96,6 @@ const App = () => {
       ipcRenderer.removeListener('executed-from', restartEditorPreview);
     };
   }, []);
-
-  useMount(() => {
-    const fetchIsGitInstalled = async () => {
-      try {
-        await isGitInstalled({});
-        dispatch(setIsGitInstalled(true));
-      } catch (error) {
-        dispatch(setIsGitInstalled(false));
-      }
-    };
-
-    fetchIsGitInstalled();
-  });
 
   // called from main thread because thunks cannot be dispatched by main
   const onOpenProjectFolderFromMainThread = useCallback((_: any, project: Project) => {

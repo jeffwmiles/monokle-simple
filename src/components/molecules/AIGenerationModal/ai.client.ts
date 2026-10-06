@@ -1,8 +1,8 @@
-import {Configuration, OpenAIApi} from 'openai';
+import OpenAI from 'openai';
 
 import {electronStore} from '@shared/utils';
 
-let openai: OpenAIApi | undefined;
+let openai: OpenAI | undefined;
 let lastApiKey: string | undefined;
 
 export const getOpenAIClient = () => {
@@ -12,10 +12,10 @@ export const getOpenAIClient = () => {
   }
 
   if (!openai || lastApiKey !== apiKey) {
-    const openAiConfiguration = new Configuration({
+    openai = new OpenAI({
       apiKey,
+      dangerouslyAllowBrowser: true,
     });
-    openai = new OpenAIApi(openAiConfiguration);
   }
 
   lastApiKey = apiKey;

@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef} from 'react';
-import {monaco} from 'react-monaco-editor';
+import { monaco } from "@components/foundation/monaco";
 
 import {debounce} from 'lodash';
 

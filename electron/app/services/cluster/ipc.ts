@@ -1,14 +1,15 @@
+import {CLUSTER_DISABLED_MESSAGE} from '@shared/constants/capabilities';
+
 import {handleIpc} from '../../utils/ipc';
-import {debugProxy, getKubeConfig, getProxyPort, setup, stopWatchingKubeconfig, watchKubeconfig} from './handlers';
-import {getEnvKubeconfigs} from './utils/getDefaultKubeConfig';
 
-// Cluster & Proxy management
-handleIpc('cluster:setup', setup);
-handleIpc('cluster:debug-proxy', debugProxy);
-handleIpc('cluster:get-proxy-port', getProxyPort);
+const disabled = () => {
+  throw new Error(CLUSTER_DISABLED_MESSAGE);
+};
 
-// Kubeconfig management
-handleIpc('kubeconfig:get', getKubeConfig);
-handleIpc('kubeconfig:get:env', getEnvKubeconfigs);
-handleIpc('kubeconfig:watch', watchKubeconfig);
-handleIpc('kubeconfig:watch:stop', stopWatchingKubeconfig);
+handleIpc('cluster:setup', disabled);
+handleIpc('cluster:debug-proxy', disabled);
+handleIpc('cluster:get-proxy-port', disabled);
+handleIpc('kubeconfig:get', disabled);
+handleIpc('kubeconfig:get:env', () => []);
+handleIpc('kubeconfig:watch', disabled);
+handleIpc('kubeconfig:watch:stop', () => undefined);

@@ -1,4 +1,4 @@
-import {TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
 
 import * as S from './Header.styled';
 

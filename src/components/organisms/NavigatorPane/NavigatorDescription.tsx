@@ -9,7 +9,7 @@ import {setValidationFilters} from '@redux/validation/validation.slice';
 
 import {useRefSelector} from '@utils/hooks';
 
-import {ProblemIcon} from '@monokle/components';
+import { ProblemIcon } from "@components/foundation/validation";
 import {isInPreviewModeSelector} from '@shared/utils';
 
 import * as S from './NavigatorDescription.styled';

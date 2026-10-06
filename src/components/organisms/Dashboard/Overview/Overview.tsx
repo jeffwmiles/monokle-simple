@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-import {TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
 import {trackEvent} from '@shared/utils';
 
 import {Activity} from './Activity';

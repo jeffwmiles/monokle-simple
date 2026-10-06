@@ -6,7 +6,7 @@ import {useAppSelector} from '@redux/hooks';
 import {RootState} from '@shared/models/rootState';
 import {Size} from '@shared/models/window';
 
-export function useFocus<T>(): [React.RefObject<T>, () => void] {
+export function useFocus<T>(): [React.RefObject<T | null>, () => void] {
   const htmlElRef = useRef<T>(null);
   const focus = () => {
     const current = htmlElRef.current;
@@ -104,11 +104,11 @@ export const useRefSelector = <T>(selector: (state: RootState) => T): MutableRef
 };
 
 type HookComponent<Props> = {
-  (props: Props): JSX.Element;
+  (props: Props): React.JSX.Element;
   componentProps?: Props;
 };
 
-export function createUseComponentHook<Props>(component: (props?: Props) => JSX.Element) {
+export function createUseComponentHook<Props>(component: (props?: Props) => React.JSX.Element) {
   const useComponent = (componentProps: Props) => {
     const componentRef = useRef<HookComponent<Props> | null>(null);
     if (componentRef.current) {
@@ -121,7 +121,7 @@ export function createUseComponentHook<Props>(component: (props?: Props) => JSX.
       const hookComponent: HookComponent<Props> = () => component(hookComponent.componentProps);
       componentRef.current = hookComponent;
     }, []);
-    return (componentRef.current === null ? () => null : componentRef.current) as () => JSX.Element;
+    return (componentRef.current === null ? () => null : componentRef.current) as () => React.JSX.Element;
   };
   return useComponent;
 }

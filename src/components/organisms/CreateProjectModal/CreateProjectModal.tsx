@@ -1,7 +1,8 @@
 import {useRef} from 'react';
 
 import {Button, Form, Input, Modal} from 'antd';
-import {FormProps, useForm} from 'antd/lib/form/Form';
+import type {FormProps} from 'antd';
+import {Form as AntdForm} from 'antd';
 
 import {existsSync} from 'fs';
 import {includes, isEmpty} from 'lodash';
@@ -22,7 +23,7 @@ const CreateProjectModal: React.FC = () => {
   const projectsRootPath = useAppSelector(state => state.config.projectsRootPath);
   const uiState = useAppSelector(state => state.ui.createProjectModal);
 
-  const [createProjectForm] = useForm();
+  const [createProjectForm] = AntdForm.useForm();
   const pickedPath = useRef(projectsRootPath);
 
   const {openFileExplorer, fileExplorerProps} = useFileExplorer(

@@ -1,5 +1,5 @@
 import {useMemo} from 'react';
-import MonacoEditor, {monaco} from 'react-monaco-editor';
+import MonacoEditor, { monaco } from "@components/foundation/monaco";
 
 import {TabsProps} from 'antd';
 

@@ -1,4 +1,4 @@
-import {MonacoDiffEditor, monaco} from 'react-monaco-editor';
+import { MonacoDiffEditor, monaco } from "@components/foundation/monaco";
 import {useMeasure} from 'react-use';
 
 import {isEmpty} from 'lodash';
@@ -11,7 +11,7 @@ import {usePaneHeight} from '@hooks/usePaneHeight';
 
 import {KUBESHOP_MONACO_THEME} from '@utils/monaco';
 
-import {TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
 
 import * as S from './GitView.styled';
 

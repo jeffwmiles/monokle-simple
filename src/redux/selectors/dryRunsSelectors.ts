@@ -170,7 +170,9 @@ export const dryRunNodesSelector = createSelector(
       });
     }
 
-    return list;
+    return list.filter(
+      node => node.type === 'helm-chart' || node.type === 'helm-values' || node.type === 'helm-config'
+    );
   }
 );
 

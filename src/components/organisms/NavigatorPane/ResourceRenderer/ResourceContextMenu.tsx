@@ -2,6 +2,7 @@ import {useCallback, useMemo, useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 
 import {Modal} from 'antd';
+import type {MenuProps} from 'antd';
 
 import {ExclamationCircleOutlined} from '@ant-design/icons';
 
@@ -221,7 +222,7 @@ const ResourceKindContextMenu = (props: Props) => {
     }
   };
 
-  const menuItems = [
+  const menuItems: NonNullable<MenuProps['items']> = [
     {key: 'deploy', label: 'Deploy', disabled: isDeployDisabled, onClick: () => setIsApplyModalVisible(true)},
     {
       key: 'diff',
@@ -233,7 +234,7 @@ const ResourceKindContextMenu = (props: Props) => {
     ...(isInClusterMode && resource.kind === 'Pod'
       ? [
           {key: 'shell', label: 'Shell', onClick: onClickOpenShell},
-          {key: 'divider-2', type: 'divider'},
+          {key: 'divider-2', type: 'divider' as const},
         ]
       : []),
     ...(isInPreviewMode || resource.storage === 'transient'
@@ -244,7 +245,7 @@ const ResourceKindContextMenu = (props: Props) => {
             disabled: isInPreviewMode,
             onClick: onClickSaveToFileFolder,
           },
-          {key: 'divider-3', type: 'divider'},
+          {key: 'divider-3', type: 'divider' as const},
         ]
       : []),
     {key: 'rename', label: 'Rename', onClick: onClickRename},

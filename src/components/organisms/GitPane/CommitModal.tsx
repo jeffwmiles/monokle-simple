@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 
 import {Form, Input, Modal} from 'antd';
-import {useForm} from 'antd/lib/form/Form';
+import {Form as AntdForm} from 'antd';
 
 import {setCommitsCount} from '@redux/git';
 import {commitChanges, getAheadBehindCommitsCount} from '@redux/git/git.ipc';
@@ -30,7 +30,7 @@ const CommitModal: React.FC<IProps> = props => {
   const [isFocused, setIsFocused] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [form] = useForm();
+  const [form] = AntdForm.useForm();
 
   const onOkHandler = () => {
     form.submit();

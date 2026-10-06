@@ -2,7 +2,7 @@ import * as Rt from 'runtypes';
 
 import {GitRepositoryRuntype} from './repository';
 
-const BundledTemplatePluginModuleRuntype = Rt.Record({
+const BundledTemplatePluginModuleRuntype = Rt.Object({
   type: Rt.Literal('template'),
   path: Rt.String,
 });
@@ -11,21 +11,21 @@ const TemplatePluginModuleRuntype = Rt.Union(BundledTemplatePluginModuleRuntype)
 
 const AnyPluginModuleRuntype = TemplatePluginModuleRuntype;
 
-const PluginPackageJsonRuntype = Rt.Record({
+const PluginPackageJsonRuntype = Rt.Object({
   name: Rt.String,
   author: Rt.String,
   version: Rt.String,
   repository: Rt.String,
   description: Rt.Optional(Rt.String),
-  monoklePlugin: Rt.Record({
+  monoklePlugin: Rt.Object({
     id: Rt.String,
     modules: Rt.Array(AnyPluginModuleRuntype),
     icon: Rt.Optional(Rt.String),
     helpUrl: Rt.Optional(Rt.String),
   }),
-}).And(Rt.Dictionary(Rt.Unknown));
+}).and(Rt.Record(Rt.String, Rt.Unknown));
 
-const AnyPluginRuntype = Rt.Record({
+const AnyPluginRuntype = Rt.Object({
   id: Rt.String,
   name: Rt.String,
   author: Rt.String,

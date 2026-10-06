@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
 
-import {ColumnsType} from 'antd/lib/table';
+import type {TableColumnsType as ColumnsType} from 'antd';
 
 import styled from 'styled-components';
 

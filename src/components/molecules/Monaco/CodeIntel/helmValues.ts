@@ -1,4 +1,4 @@
-import {monaco} from 'react-monaco-editor';
+import { monaco } from "@components/foundation/monaco";
 
 import {CodeIntelApply} from '@molecules/Monaco/CodeIntel/types';
 import {getHelmValueFile, goToFileAndHighlightCode} from '@molecules/Monaco/CodeIntel/util';

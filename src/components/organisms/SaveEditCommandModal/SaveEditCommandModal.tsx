@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 
 import {Form, Input, Modal} from 'antd';
-import {useForm} from 'antd/lib/form/Form';
+import {Form as AntdForm} from 'antd';
 
 import {cloneDeep} from 'lodash';
 import {v4 as uuid} from 'uuid';
@@ -21,7 +21,7 @@ const SaveEditCommandModal: React.FC = () => {
   const {isOpen, command} = useAppSelector(state => state.ui.saveEditCommandModal);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [form] = useForm();
+  const [form] = AntdForm.useForm();
 
   const onOkHandler = () => {
     form.validateFields().then(values => {

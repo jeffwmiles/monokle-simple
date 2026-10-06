@@ -1,13 +1,9 @@
-import * as k8s from '@kubernetes/client-node';
-
-import {BrowserWindow, app, ipcMain} from 'electron';
+import {app, ipcMain} from 'electron';
 import log from 'electron-log';
 
 import asyncLib from 'async';
-import {spawn} from 'child_process';
 import {machineIdSync} from 'node-machine-id';
 import * as path from 'path';
-import stream from 'stream';
 
 import {
   DOWNLOAD_PLUGIN,
@@ -65,45 +61,13 @@ const templatesDir = path.join(userDataDir, 'monokleTemplates');
 const templatePacksDir = path.join(userDataDir, 'monokleTemplatePacks');
 const machineId = machineIdSync();
 
-let commandStream: stream.Readable = new stream.Readable();
-commandStream._read = () => {};
-let outputStream: stream.Writable | null = null;
-
-if (outputStream) {
-  (outputStream as stream.Writable).end();
-}
-
-// string is the terminal id
-let ptyProcessMap: Record<string, any> = {};
-
-const killTerminal = (id: string) => {
-  const ptyProcess = ptyProcessMap[id];
-
-  if (!ptyProcess) {
-    return;
-  }
-
-  if (process.platform === 'win32') {
-    try {
-      spawn('taskkill', ['/pid', ptyProcess.pid.toString(), '/f', '/t']);
-    } catch (e) {
-      log.error(e);
-    }
-  } else {
-    try {
-      ptyProcess.kill();
-    } catch (e) {
-      log.error(e);
-    }
-  }
-
-  delete ptyProcessMap[id];
-};
-
 ipcMain.on('track-event', async (event: any, {eventName, payload}: any) => {
   const segmentClient = getSegmentClient();
   if (segmentClient) {
-    const minutesPassedSinceFirstTimeRun = calculateMinutesPassed(electronStore.get('main.firstTimeRunTimestamp'));
+    const firstTimeRunTimestamp = electronStore.get('main.firstTimeRunTimestamp');
+    const minutesPassedSinceFirstTimeRun = firstTimeRunTimestamp === undefined
+      ? -1
+      : calculateMinutesPassed(firstTimeRunTimestamp);
 
     const properties: any = {appVersion: app.getVersion(), ...payload};
 
@@ -303,127 +267,6 @@ ipcMain.on('global-electron-store-update', (event, args: any) => {
   } else {
     log.warn(`received invalid event type for global electron store update ${args.eventType}`);
   }
-});
-
-ipcMain.on('shell.init', (event, args) => {
-  const {rootFilePath, shell, terminalId, webContentsId} = args;
-
-  if (!webContentsId) {
-    return;
-  }
-
-  const currentWebContents = BrowserWindow.fromId(webContentsId)?.webContents;
-
-  if (ptyProcessMap[terminalId]) {
-    return;
-  }
-
-  try {
-    import('node-pty').then(pty => {
-      const ptyProcess = pty.spawn(shell, [], {
-        name: 'xterm-256color',
-        rows: 24,
-        cols: 80,
-        cwd: rootFilePath,
-        env: process.env as Record<string, string>,
-        useConpty: false,
-      });
-
-      ptyProcessMap[terminalId] = ptyProcess;
-
-      if (currentWebContents) {
-        ptyProcess.onData((incomingData: any) => {
-          currentWebContents.send(`shell.incomingData.${terminalId}`, incomingData);
-        });
-
-        ptyProcess.onExit(() => {
-          currentWebContents.send(`shell.exit.${terminalId}`);
-        });
-
-        currentWebContents.send(`shell.initialized.${terminalId}`);
-      } else {
-        log.error('Web contents is not found');
-      }
-    });
-  } catch (e) {
-    log.error('Pty process could not be created ', e);
-  }
-});
-
-ipcMain.on('shell.resize', (event, args) => {
-  const {cols, rows, terminalId} = args;
-  const ptyProcess = ptyProcessMap[terminalId];
-
-  if (ptyProcess) {
-    ptyProcess.resize(cols, rows);
-  }
-});
-
-ipcMain.on('shell.ptyProcessWriteData', (event, d) => {
-  const {data, terminalId} = d;
-  const ptyProcess = ptyProcessMap[terminalId];
-
-  if (ptyProcess) {
-    ptyProcess.write(data);
-  }
-});
-
-ipcMain.on('shell.ptyProcessKill', (event, data) => {
-  const {terminalId} = data;
-
-  killTerminal(terminalId);
-});
-
-ipcMain.on('shell.ptyProcessKillAll', () => {
-  Object.keys(ptyProcessMap).forEach(id => {
-    killTerminal(id);
-  });
-});
-
-ipcMain.on('pod.terminal.command', (event, command) => {
-  commandStream.push(`${command}`);
-});
-
-ipcMain.on('pod.terminal.close', () => {
-  if (outputStream) {
-    outputStream.end();
-  }
-});
-
-ipcMain.on('pod.terminal.init', (event, args) => {
-  const {podNamespace, podName, containerName, webContentsId} = args;
-  if (!webContentsId) {
-    return;
-  }
-
-  outputStream = new stream.Writable();
-
-  const currentWebContents = BrowserWindow.fromId(webContentsId)?.webContents;
-  outputStream._write = (chunk, encoding, next) => {
-    if (chunk && currentWebContents) {
-      currentWebContents.send('pod.terminal.output', chunk.toString());
-    }
-    next();
-  };
-
-  const kc = new k8s.KubeConfig();
-  kc.loadFromDefault();
-  const exec = new k8s.Exec(kc);
-  exec.exec(
-    podNamespace,
-    podName,
-    containerName,
-    ['/bin/sh'],
-    outputStream,
-    outputStream,
-    commandStream,
-    true,
-    (status: k8s.V1Status) => {
-      if (currentWebContents) {
-        currentWebContents.send('pod.terminal.output', status.message);
-      }
-    }
-  );
 });
 
 ipcMain.handle('analytics:toggleTracking', async (_event, {disableEventTracking}) => {

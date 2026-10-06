@@ -12,7 +12,7 @@ import {useFilteredPluginMap} from '@hooks/useFilteredPluginMap';
 
 import EmptySelectedTemplate from '@assets/EmptySelectedTemplate.svg';
 
-import {SearchInput, TitleBar} from '@monokle/components';
+import { SearchInput, TitleBar } from "@components/foundation/primitives";
 
 import TemplateCollapseHeader from './TemplateCollapseHeader';
 import TemplateCollapseItem from './TemplateCollapseItem';

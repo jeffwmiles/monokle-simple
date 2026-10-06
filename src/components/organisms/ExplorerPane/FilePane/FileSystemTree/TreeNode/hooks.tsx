@@ -1,7 +1,7 @@
 import {useCallback, useMemo, useState} from 'react';
 
 import {Modal} from 'antd';
-import {ItemType as AntdMenuItem} from 'antd/lib/menu/hooks/useItems';
+import type {MenuProps as AntdMenuProps} from 'antd';
 
 import {ExclamationCircleOutlined} from '@ant-design/icons';
 
@@ -27,7 +27,6 @@ import {setRootFolder} from '@redux/thunks/setRootFolder';
 import {useFilterByFileOrFolder} from '@hooks/fileTreeHooks';
 
 import {deleteFileEntry, dispatchDeleteAlert, duplicateEntity, isFileEntryDisabled} from '@utils/files';
-import {useOpenOnGithub} from '@utils/git';
 import {useRefSelector} from '@utils/hooks';
 
 import {isYamlFile} from '@monokle/validation';
@@ -37,6 +36,8 @@ import {FileEntry} from '@shared/models/fileEntry';
 import {isDefined} from '@shared/utils/filter';
 import {isHelmChartFile, isHelmTemplateFile, isHelmValuesFile} from '@shared/utils/helm';
 import {showItemInFolder} from '@shared/utils/shell';
+
+type AntdMenuItem = NonNullable<AntdMenuProps['items']>[number];
 
 export const useCanPreview = (fileEntry?: FileEntry, isDisabled?: boolean) => {
   const localResourceMetaMapRef = useResourceMetaMapRef('local');
@@ -260,9 +261,6 @@ export const useCommonMenuItems = (props: {deleteEntry: (e: FileEntry) => void},
   const platformFileManagerName = useMemo(() => (osPlatform === 'darwin' ? 'Finder' : 'Explorer'), [osPlatform]);
   const duplicate = useDuplicate();
 
-  const {canOpenOnGithub, openOnGithub} = useOpenOnGithub(
-    fileEntry?.name === ROOT_FILE_ENTRY ? '' : fileEntry?.filePath
-  );
   const renameFileEntry = useRename();
 
   const menuItems = useMemo(() => {
@@ -335,16 +333,6 @@ export const useCommonMenuItems = (props: {deleteEntry: (e: FileEntry) => void},
     });
 
     newMenuItems.push({
-      key: 'open-in-github',
-      label: 'Open on GitHub',
-      disabled: !canOpenOnGithub,
-      onClick: (e: any) => {
-        e.domEvent.stopPropagation();
-        openOnGithub();
-      },
-    });
-
-    newMenuItems.push({
       key: 'reveal',
       label: `Reveal in ${platformFileManagerName}`,
       onClick: (e: any) => {
@@ -360,7 +348,7 @@ export const useCommonMenuItems = (props: {deleteEntry: (e: FileEntry) => void},
     });
 
     return newMenuItems;
-  }, [fileEntry, canOpenOnGithub, platformFileManagerName, renameFileEntry, deleteEntry, openOnGithub, duplicate]);
+  }, [fileEntry, platformFileManagerName, renameFileEntry, deleteEntry, duplicate]);
 
   return menuItems;
 };

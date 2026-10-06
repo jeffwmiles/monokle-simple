@@ -10,12 +10,12 @@ export type K8sObject = {
   [x: string]: any;
 };
 
-export const K8sObjectRuntype: Rt.Runtype<K8sObject> = Rt.Record({
+export const K8sObjectRuntype = Rt.Object({
   apiVersion: Rt.String,
   kind: Rt.String,
-  metadata: Rt.Record({
+  metadata: Rt.Object({
     name: Rt.String,
   }),
 });
 
-export const isK8sObject = K8sObjectRuntype.guard;
+export const isK8sObject = (value: unknown): value is K8sObject => K8sObjectRuntype.guard(value);

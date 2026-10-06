@@ -4,8 +4,8 @@ import {useState} from 'react';
 import {useEffectOnce} from 'react-use';
 
 import {Button, Form, Input, Modal} from 'antd';
-import {useForm} from 'antd/lib/form/Form';
-import Link from 'antd/lib/typography/Link';
+import {Form as AntdForm} from 'antd';
+import {Typography as AntdTypography} from 'antd';
 
 import fs from 'fs';
 import {rm} from 'fs/promises';
@@ -28,6 +28,8 @@ import {doesPathExist} from '@utils/files';
 import {Colors} from '@shared/styles/colors';
 import {trackEvent} from '@shared/utils/telemetry';
 
+const Link = AntdTypography.Link;
+
 const GitCloneModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const fromSampleProject = useAppSelector(state => state.git.gitCloneModal.fromSampleProject);
@@ -35,7 +37,7 @@ const GitCloneModal: React.FC = () => {
   const projectsRootPath = useAppSelector(state => state.config.projectsRootPath);
 
   const [loading, setLoading] = useState(false);
-  const [form] = useForm();
+  const [form] = AntdForm.useForm();
 
   const {openFileExplorer, fileExplorerProps} = useFileExplorer(
     ({folderPath}) => {

@@ -6,14 +6,14 @@ import {activeProjectSelector} from '@redux/appConfig';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setPaneConfiguration, toggleLeftMenu} from '@redux/reducers/ui';
 
-import {ActionsPane, BottomPaneManager, Dashboard, GitOpsView, NavigatorPane} from '@organisms';
+import {ActionsPane, Dashboard, NavigatorPane} from '@organisms';
 import {EmptyDashboard} from '@organisms/Dashboard/EmptyDashboard';
 
 import {ClosedPanePlaceholder} from '@molecules';
 
 import {useMainPaneDimensions} from '@utils/hooks';
 
-import {ResizableColumnsPanel, ResizableRowsPanel} from '@monokle/components';
+import {ResizableColumnsPanel, ResizableRowsPanel} from '@components/foundation/layout';
 import {isInClusterModeSelector} from '@shared/utils/selectors';
 
 import ProblemPane from '../ProblemPane';
@@ -25,7 +25,6 @@ import {activities} from './activities';
 const PaneManager: React.FC = () => {
   const dispatch = useAppDispatch();
   const activeProject = useAppSelector(activeProjectSelector);
-  const bottomSelection = useAppSelector(state => state.ui.leftMenu.bottomSelection);
   const isInClusterMode = useAppSelector(isInClusterModeSelector);
   const isPreviewLoading = useAppSelector(state => state.main.previewOptions.isLoading);
   const isProjectLoading = useAppSelector(state => state.config.isProjectLoading);
@@ -158,9 +157,7 @@ const PaneManager: React.FC = () => {
                   }
                   middle={currentActivity?.name === 'explorer' ? <NavigatorPane /> : undefined}
                   right={
-                    currentActivity?.name === 'git' ? (
-                      <GitOpsView />
-                    ) : currentActivity?.name === 'dashboard' ? (
+                    currentActivity?.name === 'dashboard' ? (
                       <Dashboard />
                     ) : currentActivity?.name === 'validation' ? (
                       <ProblemPane />
@@ -175,8 +172,8 @@ const PaneManager: React.FC = () => {
                 />
               )
             }
-            bottom={<BottomPaneManager />}
-            isBottomVisible={Boolean(bottomSelection)}
+            bottom={<></>}
+            isBottomVisible={false}
             onDragEnd={handleRowResize}
           />
         </>

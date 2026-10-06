@@ -1,10 +1,12 @@
 /* eslint-disable */
-require('dotenv').config();
-
 const fs = require('fs');
 const path = require('path');
 const log = require('loglevel');
-var electron_notarize = require('@electron/notarize');
+
+const environmentFile = path.resolve('.env');
+if (fs.existsSync(environmentFile)) {
+  process.loadEnvFile(environmentFile);
+}
 
 module.exports = async function (params) {
   // Only notarize the app if building for macOS and the NOTARIZE environment
@@ -12,36 +14,21 @@ module.exports = async function (params) {
   if (!process.env.NOTARIZE || process.platform !== 'darwin') {
     return;
   }
-  log.info('afterSign hook triggered', params);
-
-  const package = require(path.join(process.cwd(), './package.json'));
-
-  // This should match the appId from electron-builder. It reads from
-  // package.json so you won't have to maintain two separate configurations.
-  let appId = package.build.appId;
-  if (!appId) {
-    console.error("appId is missing from build configuration 'package.json'");
-  }
-
-  let appPath = path.join(params.appOutDir, `${params.packager.appInfo.productFilename}.app`);
+  const appId = params.packager.appInfo.id;
+  const appPath = path.join(params.appOutDir, `${params.packager.appInfo.productFilename}.app`);
   if (!fs.existsSync(appPath)) {
     throw new Error(`Cannot find application at: ${appPath}`);
   }
 
+  const {APPLE_TEAM_ID: teamId, APPLE_ID: appleId, APPLE_APP_SPECIFIC_PASSWORD: appleIdPassword} = process.env;
+  if (!teamId || !appleId || !appleIdPassword) {
+    throw new Error('Notarization requires APPLE_TEAM_ID, APPLE_ID, and APPLE_APP_SPECIFIC_PASSWORD.');
+  }
+
   log.info(`Notarizing ${appId} found at ${appPath}`);
 
-  try {
-    await electron_notarize.notarize({
-      tool: 'notarytool',
-      teamId: process.env.APPLE_TEAM_ID,
-      appBundleId: appId,
-      appPath: appPath,
-      appleId: process.env.APPLE_ID,
-      appleIdPassword: process.env.APPLE_APP_SPECIFIC_PASSWORD,
-    });
-  } catch (error) {
-    log.error(error);
-  }
+  const {notarize} = await import('@electron/notarize');
+  await notarize({teamId, appPath, appleId, appleIdPassword});
 
   log.info(`Done notarizing ${appId}`);
 };

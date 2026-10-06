@@ -43,13 +43,6 @@ const StartPage: React.FC = () => {
 
   const options = useStartPageOptions();
 
-  const onClickQuickClusterLoad = () => {
-    trackEvent('dashboard/open', {from: 'start-screen-quick-quick-cluster-mode'});
-    dispatch(setLeftMenuSelection('dashboard'));
-    dispatch(setIsInQuickClusterMode(true));
-    dispatch(toggleStartProjectPane());
-  };
-
   const onClickBrowseHelmCharts = () => {
     dispatch(setIsInQuickClusterMode(true));
     dispatch(setLeftMenuSelection('helm'));
@@ -89,10 +82,6 @@ const StartPage: React.FC = () => {
               onClick={() => {
                 trackEvent('app_start/select_page', {page: key});
 
-                if (key === 'quick-cluster-mode') {
-                  onClickQuickClusterLoad();
-                  return;
-                }
                 if (key === 'helm-pane') {
                   onClickBrowseHelmCharts();
                   return;
@@ -111,8 +100,10 @@ const StartPage: React.FC = () => {
         </S.Menu>
 
         <S.ContentContainer>
-          <S.ContentTitle>{options[selectedOption].title}</S.ContentTitle>
-          {options[selectedOption].content}
+          <S.ContentTitle>
+            {options[selectedOption === 'quick-cluster-mode' ? 'projects' : selectedOption].title}
+          </S.ContentTitle>
+          {options[selectedOption === 'quick-cluster-mode' ? 'projects' : selectedOption].content}
         </S.ContentContainer>
 
         <S.AsideContainer />

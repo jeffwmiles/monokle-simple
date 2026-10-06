@@ -1,6 +1,6 @@
 import {Draft, PayloadAction, createSlice} from '@reduxjs/toolkit';
 
-import {WritableDraft} from 'immer/dist/internal';
+import type {WritableDraft} from 'immer';
 import log from 'loglevel';
 
 import {setRootFolder} from '@redux/thunks/setRootFolder';

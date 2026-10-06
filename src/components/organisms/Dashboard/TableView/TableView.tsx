@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react';
 
-import {ColumnsType} from 'antd/lib/table';
+import type {TableColumnsType as ColumnsType} from 'antd';
 
 import {setActiveTab, setDashboardSelectedResourceId} from '@redux/dashboard';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';

@@ -1,24 +1,22 @@
 /* eslint-disable import/first */
 /* eslint-disable import/order */
-import moduleAlias from 'module-alias';
+import {app} from 'electron';
+import log from 'electron-log';
+
 import additionalEnvironmentVariables from './env.json';
 
-Object.keys(additionalEnvironmentVariables).forEach((key: string) => {
-  // @ts-ignore
-  process.env[key] = additionalEnvironmentVariables[key];
+Object.entries(additionalEnvironmentVariables).forEach(([key, value]) => {
+  if (typeof value !== 'string') {
+    throw new Error(`Environment variable ${key} must be a string.`);
+  }
+  process.env[key] = value;
 });
 
-moduleAlias.addAliases({
-  '@constants': `${__dirname}/../src/constants`,
-  '@redux': `${__dirname}/../src/redux`,
-  '@utils': `${__dirname}/../src/utils`,
-  '@shared': `${__dirname}/../src/shared`,
-  '@src': `${__dirname}/../src/`,
-  '@root': `${__dirname}/../`,
-});
+process.env.MONOKLE_APP_PATH = app.getAppPath();
+process.env.MONOKLE_APP_IS_PACKAGED = String(app.isPackaged);
+log.initialize();
 
-/*
-  NOTE: This must be imported after the aliases are created
-  Prettier is disabled in this file in order to keep this import where it needs to be.
-*/
-import './app';
+import('./app').catch(error => {
+  console.error(error);
+  process.exitCode = 1;
+});

@@ -1,5 +1,5 @@
 import {useMemo, useState} from 'react';
-import {MonacoDiffEditor, monaco} from 'react-monaco-editor';
+import { MonacoDiffEditor, monaco } from "@components/foundation/monaco";
 import {useWindowSize} from 'react-use';
 
 import {Modal, Select} from 'antd';

@@ -13,7 +13,7 @@ import {setImagesSearchedValue} from '@redux/reducers/main';
 
 import AccordionPanel, {InjectedPanelProps} from '@components/atoms/AccordionPanel/AccordionPanel';
 
-import {TitleBar, TitleBarCount} from '@monokle/components';
+import { TitleBar, TitleBarCount } from "@components/foundation/primitives";
 import {Colors} from '@shared/styles';
 import {trackEvent} from '@shared/utils';
 

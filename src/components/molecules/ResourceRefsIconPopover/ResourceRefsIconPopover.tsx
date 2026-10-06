@@ -4,7 +4,7 @@ import {Popover} from 'antd';
 
 import {size} from 'lodash';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
 import {isIncomingRef, isOutgoingRef, isUnsatisfiedRef} from '@monokle/validation';
 import {ResourceMeta} from '@shared/models/k8sResource';
 import {Colors} from '@shared/styles/colors';

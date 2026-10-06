@@ -1,7 +1,7 @@
 // weird workaround to get all ENV values (accessing process.env directly only returns a subset)
 // export const PROCESS_ENV = JSON.parse(JSON.stringify(process)).env;
-// @ts-nocheck
-import execa from 'execa';
+import {execaSync} from 'execa';
+import nodeProcess from 'node:process';
 import stripAnsi from 'strip-ansi';
 
 const args = ['-ilc', 'echo -n "_SHELL_ENV_DELIMITER_"; env; echo -n "_SHELL_ENV_DELIMITER_"; exit'];
@@ -12,7 +12,7 @@ const ENV = {
 };
 
 const detectShell = () => {
-  const {env} = process;
+  const {env} = nodeProcess;
 
   if (process.platform === 'win32') {
     return env.COMSPEC || 'cmd.exe';
@@ -27,9 +27,12 @@ const detectShell = () => {
 
 const detectedShell = detectShell();
 
-const parseEnv = env => {
-  env = env.split('_SHELL_ENV_DELIMITER_')[1];
-  const returnValue = {};
+const parseEnv = (output: string): NodeJS.ProcessEnv => {
+  const env = output.split('_SHELL_ENV_DELIMITER_')[1];
+  if (env === undefined) {
+    throw new Error('Shell environment output is missing its delimiter.');
+  }
+  const returnValue: NodeJS.ProcessEnv = {};
 
   stripAnsi(env)
     .split('\n')
@@ -42,24 +45,24 @@ const parseEnv = env => {
   return returnValue;
 };
 
-export function shellEnvSync(): any {
+export function shellEnvSync(): NodeJS.ProcessEnv {
   if (process.platform === 'win32') {
-    return process.env;
+    return nodeProcess.env;
   }
 
   try {
-    const {stdout} = execa.sync(detectedShell, args, {extendEnv: true, env: ENV});
+    const {stdout} = execaSync(detectedShell, args, {extendEnv: true, env: ENV});
     return parseEnv(stdout);
   } catch (error) {
     if (detectedShell) {
       throw error;
     } else {
-      return process.env;
+      return nodeProcess.env;
     }
   }
 }
 
-let mainProcessEnv: any | undefined;
+let mainProcessEnv: NodeJS.ProcessEnv | undefined;
 
 export function getMainProcessEnv() {
   if (!mainProcessEnv) {
@@ -68,6 +71,6 @@ export function getMainProcessEnv() {
   return mainProcessEnv;
 }
 
-export function setMainProcessEnv(env: any) {
+export function setMainProcessEnv(env: NodeJS.ProcessEnv) {
   mainProcessEnv = env;
 }

@@ -15,7 +15,7 @@ import {problemsByResourceSelector, useValidationSelector} from '@redux/validati
 
 import {useSelectorWithRef} from '@utils/hooks';
 
-import {ResourceGraph} from '@monokle/components';
+import { ResourceGraph } from "@components/foundation/resourceGraph";
 import {RuleLevel} from '@monokle/validation';
 import {ResourceMeta} from '@shared/models/k8sResource';
 import {trackEvent} from '@shared/utils';
@@ -85,10 +85,6 @@ const ResourceGraphTab: React.FC = () => {
     [dispatch, selectionRef]
   );
 
-  const elkWorker = useMemo(() => {
-    return new Worker(new URL('elkjs/lib/elk-worker.min.js', import.meta.url));
-  }, []);
-
   return (
     <ResourceGraph
       resources={resources as any}
@@ -96,7 +92,6 @@ const ResourceGraphTab: React.FC = () => {
       getProblemsForResource={getProblemsForResource}
       onSelectResource={onSelectResource}
       onSelectImage={onSelectImage}
-      elkWorker={elkWorker}
       defaultNamespace={
         clusterConnectionNamespace
           ? clusterConnectionNamespace !== '<all>' && clusterConnectionNamespace !== '<not-namespaced>'
