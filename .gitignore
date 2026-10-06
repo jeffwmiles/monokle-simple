@@ -8,6 +8,7 @@ node_modules
 .idea
 .pnp.js
 *.iml
+.venv-build/
 
 # testing
 /coverage
