@@ -1,1 +1,0 @@
-npm exec --yes=false -- lint-staged --config .husky/lint-staged.config.mjs

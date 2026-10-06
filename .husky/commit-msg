@@ -1,1 +1,0 @@
-npm exec --yes=false -- commitlint --edit "$1"

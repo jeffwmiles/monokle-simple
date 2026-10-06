@@ -1,11 +1,3 @@
-
- <em>**Note:** Unfortunately [we are not able to maintain or evolve Monokle at this time](https://github.com/kubeshop/monokle/issues/4265).
-
- We are of course happy to help anyone interested in [contributing](https://kubeshop.github.io/monokle/contributing) to resolve any outstanding issues! Thanks for your understanding!</em>
-
- @olensmar
-
-
 <p align="center">
     <img src="src/assets/MonokleLogoLight.svg#gh-light-mode-only" alt="Monokle Logo Light"/>
     <img src="src/assets/MonokleLogoDark.svg#gh-dark-mode-only" alt="Monokle Logo Dark" />
@@ -40,13 +32,6 @@
   </a>
 </p>
 
-<p align="center">
-  <a href="http://youtu.be/y3GLmTsna1M">
-    <img src="https://res.cloudinary.com/duczlt4nw/image/upload/v1677516135/YouTube_Thumbnail_17_hxccnv.png">
-    <p align="center">Click on the image or <a href="http://youtu.be/y3GLmTsna1M">this link</a> to watch the "Intro to Monokle" short video (4 mins)</p>
-  </a>
-</p>
-
 ## Helm-Only Build
 
 This fork is for local Helm chart rendering and inspection of generated YAML. Live Kubernetes connections,
@@ -69,6 +54,12 @@ are rejected. `--kube-version` and `--api-versions` can simulate Kubernetes capa
 cannot query a live cluster. Helm repository downloads and updates still use network access; this is not an
 air-gapped build or an operating-system network sandbox.
 
+### Dependency Modernization
+
+The application’s main frameworks and development tools were upgraded, including React 19, Ant Design 6, TypeScript 7, and Electron 44. The old Create React App/CRACO build was replaced with Vite for the interface and esbuild for Electron; ESLint was replaced with Biome, and Jest now uses SWC instead of `ts-jest` to transform tests.
+
+The incompatible `@monokle/components` UI package, which supplied shared navigation, panels, validation, walkthroughs, and resource graphs, was removed and those parts are now implemented in app-owned components under `src/components/foundation`. The older `react-monaco-editor` integration was replaced with the maintained `@monaco-editor/react` wrapper. Dependencies used only by disabled Git, cluster, or terminal features were removed or moved to development-only use, keeping the shipped app focused on local Helm rendering and YAML inspection.
+
 Package manifests cannot contain comments, so disabled dependencies are recorded here:
 
 - Removed runtime dependency: `node-pty` (`0.11.0-beta11`), used only by the disabled embedded shell.
@@ -83,6 +74,14 @@ Package manifests cannot contain comments, so disabled dependencies are recorded
 Rebuild before running or packaging; existing build output and installers still contain the previous capabilities.
 
 ## Core Features (Upstream)
+
+
+ <em>**Note:** Unfortunately [we are not able to maintain or evolve Monokle at this time](https://github.com/kubeshop/monokle/issues/4265).
+
+ We are of course happy to help anyone interested in [contributing](https://kubeshop.github.io/monokle/contributing) to resolve any outstanding issues! Thanks for your understanding!</em>
+
+ @olensmar
+
 
 - 👩‍💻 Single IDE for your configuration files, manifests, resources and cluster management
 - 🌤️ Connect to your clusters and see real time state and resources
