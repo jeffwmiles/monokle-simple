@@ -15,7 +15,7 @@ import {CollapseIcon, ExpandIcon} from '@components/atoms/Icons';
 
 import {useRefSelector} from '@utils/hooks';
 
-import {TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
 import {ROOT_FILE_ENTRY} from '@shared/constants/fileEntry';
 import {InjectedPanelProps} from '@shared/models/explorer';
 import {trackEvent} from '@shared/utils';

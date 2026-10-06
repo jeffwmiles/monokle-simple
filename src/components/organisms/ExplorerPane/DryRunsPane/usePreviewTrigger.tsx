@@ -2,7 +2,8 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {Tooltip} from 'antd';
 
-import {AnyAction, isAnyOf, removeListener} from '@reduxjs/toolkit';
+import {isAnyOf, removeListener} from '@reduxjs/toolkit';
+import type {UnknownAction} from 'redux';
 
 import {isEqual} from 'lodash';
 
@@ -46,7 +47,7 @@ export const usePreviewTrigger = (preview: AnyPreview) => {
   useEffect(() => {
     const listener = {
       matcher: isAnyOf(startPreview.pending, startPreview.rejected, startPreview.fulfilled),
-      effect: (action: AnyAction) => {
+      effect: (action: UnknownAction) => {
         if (startPreview.pending.match(action) && isEqual(action.meta.arg, preview)) {
           setIsOptimisticLoading(true);
         }

@@ -1,6 +1,7 @@
 import {useMemo} from 'react';
 
 import {Modal, Tooltip} from 'antd';
+import type {MenuProps} from 'antd';
 
 import {ExclamationCircleOutlined} from '@ant-design/icons';
 
@@ -73,7 +74,7 @@ const HelmContextMenu: React.FC<IProps> = props => {
   );
   const platformFileManagerName = useMemo(() => (osPlatform === 'darwin' ? 'Finder' : 'Explorer'), [osPlatform]);
 
-  const menuItems = useMemo(
+  const menuItems = useMemo<NonNullable<MenuProps['items']>>(
     () => [
       helmChartMap[id] && {
         key: 'update_dependencies',

@@ -7,7 +7,7 @@ import {Space} from 'antd';
 import {useAppDispatch} from '@redux/hooks';
 import {updateSelectedPluginConfiguration} from '@redux/validation/validation.slice';
 
-import {Icon, IconNames} from '@monokle/components';
+import { Icon, IconNames } from "@components/foundation/primitives";
 
 import * as S from './ValidationHeading.styled';
 

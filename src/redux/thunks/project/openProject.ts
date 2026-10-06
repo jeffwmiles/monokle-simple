@@ -5,7 +5,6 @@ import {join, sep} from 'path';
 
 import {openProject, updateProjectConfig} from '@redux/appConfig';
 import {setLeftMenuSelection, toggleStartProjectPane} from '@redux/reducers/ui';
-import {monitorGitFolder} from '@redux/services/gitFolderMonitor';
 import {populateProjectConfig, readProjectConfig} from '@redux/services/projectConfig';
 import {monitorProjectConfigFile} from '@redux/services/projectConfigMonitor';
 
@@ -33,8 +32,6 @@ export const setOpenProject = createAsyncThunk(
     if (appUi.leftMenu.selection !== 'explorer') {
       thunkAPI.dispatch(setLeftMenuSelection('explorer'));
     }
-
-    monitorGitFolder(projectRootPath, thunkAPI);
 
     const projectConfig = readProjectConfig(projectRootPath);
 

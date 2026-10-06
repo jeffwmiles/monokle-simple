@@ -1,13 +1,17 @@
-import {PlaywrightTestConfig} from '@playwright/test';
+import {defineConfig} from '@playwright/test';
 
-const config: PlaywrightTestConfig = {
+export default defineConfig({
   testDir: './tests',
   testMatch: '**/*.test.ts',
+  tsconfig: './tsconfig.json',
+  fullyParallel: false,
+  workers: 1,
+  forbidOnly: Boolean(process.env.CI),
+  outputDir: './test-results/playwright',
+  reporter: 'list',
   timeout: 200000,
   expect: {
     toMatchSnapshot: {threshold: 0.2},
   },
-  retries: 3,
-};
-
-export default config;
+  retries: process.env.CI ? 3 : 0,
+});

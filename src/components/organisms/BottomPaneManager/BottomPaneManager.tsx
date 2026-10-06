@@ -17,7 +17,7 @@ import {PreviewSavedCommand, SaveCommand} from '@components/molecules/CommandPre
 
 import {useNewTerminalMenuItems, useTerminalOptionsMenuItems} from '@hooks/menuItemsHooks';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
 import {TerminalType} from '@shared/models/terminal';
 import {trackEvent} from '@shared/utils';
 

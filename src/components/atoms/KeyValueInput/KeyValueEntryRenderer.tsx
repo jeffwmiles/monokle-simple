@@ -48,7 +48,7 @@ const KeyValueEntryRenderer: React.FC<KeyValueEntryRendererProps> = props => {
       <S.RemoveButton
         disabled={disabled}
         onClick={() => onEntryRemove(entry.id)}
-        color={Colors.redError}
+        style={{color: Colors.redError}}
         size="small"
         icon={<MinusOutlined />}
       />

@@ -1,6 +1,5 @@
-import * as k8s from '@kubernetes/client-node';
+import type * as k8s from '@kubernetes/client-node';
 
-import invariant from 'tiny-invariant';
 import {Document, isScalar, visit} from 'yaml';
 
 import {YAML_DOCUMENT_DELIMITER_NEW_LINE} from '@constants/constants';
@@ -100,31 +99,17 @@ export async function removeNamespaceFromCluster(
   kubeconfigPath: string | undefined,
   context: string
 ) {
-  const kubeClient = await createKubeClientWithSetup({
-    kubeconfig: kubeconfigPath,
-    context,
-    skipHealthCheck: true,
-  });
-  const k8sCoreV1Api = kubeClient.makeApiClient(k8s.CoreV1Api);
-  await k8sCoreV1Api.deleteNamespace(namespace);
+  throw new Error('Cluster operations are unavailable in this local Helm-only application');
 }
 
 type KubeClient = k8s.KubeConfig;
 
 export async function getNamespace(client: KubeClient, name: string): Promise<K8sObject | undefined> {
-  try {
-    const api = client.makeApiClient(k8s.CoreV1Api);
-    const resource = await api.readNamespace(name, 'true');
-    return toPojo(resource.body);
-  } catch {
-    return undefined;
-  }
+  throw new Error('Cluster operations are unavailable in this local Helm-only application');
 }
 
 export async function createNamespace(client: KubeClient, name: string): Promise<K8sObject> {
-  const api = client.makeApiClient(k8s.CoreV1Api);
-  const resource = await api.createNamespace({metadata: {name}}, 'true');
-  return toPojoStrict(resource.body);
+  throw new Error('Cluster operations are unavailable in this local Helm-only application');
 }
 
 /**
@@ -135,10 +120,5 @@ export async function createNamespace(client: KubeClient, name: string): Promise
  */
 function toPojo(resource: k8s.KubernetesObject | undefined): K8sObject | undefined {
   if (!resource) return undefined;
-  return JSON.parse(JSON.stringify(resource));
-}
-
-function toPojoStrict(resource: k8s.KubernetesObject | undefined): K8sObject {
-  invariant(resource, 'unexpected undefined resource');
   return JSON.parse(JSON.stringify(resource));
 }

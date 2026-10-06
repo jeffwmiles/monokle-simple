@@ -25,7 +25,8 @@ import {HelmChartModalConfirmWithNamespaceSelect} from '@components/molecules';
 
 import {useRefSelector} from '@utils/hooks';
 
-import {TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
+import {LIVE_CLUSTERS_ENABLED} from '@shared/constants/capabilities';
 import {ResourceMeta} from '@shared/models/k8sResource';
 import {isInClusterModeSelector} from '@shared/utils/selectors';
 
@@ -156,15 +157,17 @@ const ActionsPaneHeader: React.FC<IProps> = props => {
           type="secondary"
           actions={
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px'}}>
-              <Tooltip
-                mouseEnterDelay={TOOLTIP_DELAY}
-                title={InstallPreviewConfigurationTooltip}
-                placement="bottomLeft"
-              >
-                <Button type="primary" size="small" ghost onClick={() => setIsHelmChartApplyModalVisible(true)}>
-                  Install
-                </Button>
-              </Tooltip>
+              {LIVE_CLUSTERS_ENABLED && (
+                <Tooltip
+                  mouseEnterDelay={TOOLTIP_DELAY}
+                  title={InstallPreviewConfigurationTooltip}
+                  placement="bottomLeft"
+                >
+                  <Button type="primary" size="small" ghost onClick={() => setIsHelmChartApplyModalVisible(true)}>
+                    Install
+                  </Button>
+                </Tooltip>
+              )}
               <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={RunPreviewConfigurationTooltip} placement="bottomLeft">
                 <Button type="primary" size="small" ghost onClick={onClickRunPreviewConfiguration}>
                   Dry-run
@@ -243,46 +246,48 @@ const ActionsPaneHeader: React.FC<IProps> = props => {
               </Tooltip>
             )}
 
-            <S.ButtonContainer>
-              {showActionsDropdown ? (
-                <>
-                  {isInClusterMode && selectedResourceMeta?.kind === 'Deployment' && (
-                    <>
-                      <Scale />
-                      <Restart />
-                    </>
-                  )}
-                  <InstallDeploy applySelection={applySelection} />
-                  <Diff />
-                </>
-              ) : (
-                <Dropdown
-                  menu={{
-                    items: [
-                      {
-                        key: 'actions',
-                        label: (
-                          <S.DropdownActionContainer>
-                            {isInClusterMode && selectedResourceMeta?.kind === 'Deployment' && (
-                              <>
-                                <Scale />
-                                <Restart />
-                              </>
-                            )}
-                            <InstallDeploy applySelection={applySelection} />
-                            <Diff />
-                          </S.DropdownActionContainer>
-                        ),
-                      },
-                    ],
-                  }}
-                  placement="bottomLeft"
-                  overlayClassName="dropdown-custom-styling"
-                >
-                  <S.EllipsisOutlined />
-                </Dropdown>
-              )}
-            </S.ButtonContainer>
+            {LIVE_CLUSTERS_ENABLED && (
+              <S.ButtonContainer>
+                {showActionsDropdown ? (
+                  <>
+                    {isInClusterMode && selectedResourceMeta?.kind === 'Deployment' && (
+                      <>
+                        <Scale />
+                        <Restart />
+                      </>
+                    )}
+                    {LIVE_CLUSTERS_ENABLED && <InstallDeploy applySelection={applySelection} />}
+                    {LIVE_CLUSTERS_ENABLED && <Diff />}
+                  </>
+                ) : (
+                  <Dropdown
+                    menu={{
+                      items: [
+                        {
+                          key: 'actions',
+                          label: (
+                            <S.DropdownActionContainer>
+                              {isInClusterMode && selectedResourceMeta?.kind === 'Deployment' && (
+                                <>
+                                  <Scale />
+                                  <Restart />
+                                </>
+                              )}
+                              <InstallDeploy applySelection={applySelection} />
+                              <Diff />
+                            </S.DropdownActionContainer>
+                          ),
+                        },
+                      ],
+                    }}
+                    placement="bottomLeft"
+                    overlayClassName="dropdown-custom-styling"
+                  >
+                    <S.EllipsisOutlined />
+                  </Dropdown>
+                )}
+              </S.ButtonContainer>
+            )}
           </div>
         }
       />

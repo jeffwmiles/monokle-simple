@@ -1,4 +1,4 @@
-import MonacoEditor, {monaco} from 'react-monaco-editor';
+import MonacoEditor, { monaco } from "@components/foundation/monaco";
 import {useAsync} from 'react-use';
 
 import {Skeleton} from 'antd';

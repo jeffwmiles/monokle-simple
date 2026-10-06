@@ -39,7 +39,8 @@ export const editorTextUpdateListener: AppListenerFn = listen => {
       const selectedHelmValuesFilePath = getSelectedHelmValuesFilePath(getState());
       const selectedFilePath = selectedFilePathSelector(getState()) ?? selectedHelmValuesFilePath;
 
-      if (!_action.meta || _action.meta.arg.isUpdateFromEditor || !rootFolderPath) {
+      if (!rootFolderPath ||
+        (isAnyOf(updateResource.fulfilled, updateFileEntry.fulfilled)(_action) && _action.meta.arg.isUpdateFromEditor)) {
         return;
       }
 

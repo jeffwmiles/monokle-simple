@@ -1,6 +1,5 @@
 import log from 'electron-log';
 
-import fetch from 'node-fetch';
 import path from 'path';
 
 import {createFolder, createOrRecreateFolder, deleteFile, doesPathExist, writeFile} from '@shared/utils/fileSystem';

@@ -18,7 +18,6 @@ const helmCommonOptions = {
   '--no-hooks': 'boolean',
   '--pass-credentials': 'boolean',
   '--password': 'string',
-  '--post-renderer': 'string',
   '--render-subchart-notes': 'boolean',
   '--replace': 'boolean',
   '--repo': 'string',
@@ -46,9 +45,9 @@ export const helmTemplateOptions = {
   '--cert-file': 'string',
   '--include-crds': 'boolean',
   '--is-upgrade': 'boolean',
+  '--kube-version': 'string',
   '--output-dir': 'string',
   '--release-name': 'boolean',
   '--show-only': 'stringArray',
   '--skip-tests': 'boolean',
-  '--validate': 'boolean',
 } as const;

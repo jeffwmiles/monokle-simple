@@ -1,7 +1,5 @@
 import log from 'electron-log';
 
-import fetch from 'node-fetch';
-
 import type {ContextId, MonokleClusterError, SetupParams, SetupResult} from '@shared/ipc';
 
 import {getMonokleClusterError} from '../errors';

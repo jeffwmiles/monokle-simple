@@ -18,7 +18,7 @@ import * as S from './Notification.styled';
 
 type NotificationProps = {
   notification: AlertType;
-  badge: JSX.Element;
+  badge: React.JSX.Element;
 };
 
 const Notification: React.FC<NotificationProps> = props => {

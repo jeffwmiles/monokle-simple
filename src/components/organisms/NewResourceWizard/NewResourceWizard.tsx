@@ -7,7 +7,7 @@ import {Checkbox, Form, Input, Modal, Select, TreeSelect} from 'antd';
 import {InfoCircleOutlined} from '@ant-design/icons';
 
 import fs from 'fs';
-import {JSONSchemaFaker} from 'json-schema-faker';
+import {generateSync} from 'json-schema-faker';
 import {first} from 'lodash';
 import path from 'path';
 
@@ -108,8 +108,8 @@ const NewResourceWizard = () => {
 
   const treeData = useFileFolderTreeSelectData('folder');
 
-  const lastApiVersionRef = useRef<string>();
-  const lastKindRef = useRef<string>();
+  const lastApiVersionRef = useRef<string | undefined>(undefined);
+  const lastKindRef = useRef<string | undefined>(undefined);
 
   const [form] = Form.useForm();
   lastKindRef.current = form.getFieldValue('kind');
@@ -390,25 +390,21 @@ const NewResourceWizard = () => {
         ? joinK8sResource(selectedResourceMeta, selectedResourceContent)
         : undefined;
 
-    let jsonTemplate = selectedResource?.object;
+    let jsonTemplate: Parameters<typeof createTransientResource>[3] = selectedResource?.object;
     if (generateRandomRef.current) {
       const schema = getResourceKindSchema(formValues.kind, k8sVersionRef.current, String(userDataDirRef.current));
       if (schema) {
-        JSONSchemaFaker.option('failOnInvalidTypes', false);
-        JSONSchemaFaker.option('failOnInvalidFormat', false);
-        JSONSchemaFaker.option('useExamplesValue', true);
-        JSONSchemaFaker.option('useDefaultValue', true);
-        JSONSchemaFaker.option('maxItems', 1);
-        JSONSchemaFaker.option('alwaysFakeOptionals', true);
-
-        const value: any = JSONSchemaFaker.generate(schema);
-        if (value) {
-          delete value.status;
-          delete value.metadata;
-          delete value.kind;
-          delete value.apiVersion;
-
-          jsonTemplate = value;
+        const value = generateSync(schema, {
+          failOnInvalidTypes: false,
+          useExamplesValue: true,
+          useDefaultValue: true,
+          maxItems: 1,
+          alwaysFakeOptionals: true,
+        });
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+          jsonTemplate = Object.fromEntries(
+            Object.entries(value).filter(([key]) => !['status', 'metadata', 'kind', 'apiVersion'].includes(key))
+          );
         }
       }
     }

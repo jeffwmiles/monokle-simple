@@ -193,14 +193,14 @@ const CRDsSchemaValidation: React.FC = () => {
               )}
               <S.FileBrowserButtons>
                 {inputFilePaths?.length && (
-                  <Button onClick={onClickClear} type="ghost">
+                  <Button onClick={onClickClear} ghost>
                     Clear
                   </Button>
                 )}
                 <Button
                   disabled={Boolean(inputUrl?.length)}
                   icon={<FolderAddOutlined />}
-                  type="ghost"
+                  ghost
                   onClick={openFileExplorer}
                 >
                   Browse files

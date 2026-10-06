@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
 import {ResourceRef, isIncomingRef, isOutgoingRef, isUnsatisfiedRef} from '@monokle/validation';
 import {Colors} from '@shared/styles/colors';
 

@@ -1,5 +1,5 @@
 import {Modal} from 'antd';
-import Link from 'antd/lib/typography/Link';
+import {Typography as AntdTypography} from 'antd';
 
 import {useAppDispatch} from '@redux/hooks';
 import {closeWelcomeModal, setShowStartPageLearn, setStartPageMenuOption} from '@redux/reducers/ui';
@@ -7,6 +7,8 @@ import {closeWelcomeModal, setShowStartPageLearn, setStartPageMenuOption} from '
 import WelcomeImage from '@assets/WelcomeImage.svg';
 
 import * as S from './WelcomeModal.styled';
+
+const Link = AntdTypography.Link;
 
 const WelcomeModal = () => {
   const dispatch = useAppDispatch();

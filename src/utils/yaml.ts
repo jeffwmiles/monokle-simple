@@ -1,5 +1,5 @@
 import {Document, LineCounter, parseAllDocuments, parseDocument, stringify} from 'yaml';
-import {CreateNodeOptions, DocumentOptions, ParseOptions, SchemaOptions, ToStringOptions} from 'yaml/dist/options';
+import type {CreateNodeOptions, DocumentOptions, ParseOptions, SchemaOptions, ToStringOptions} from 'yaml';
 
 /**
  * Wrapper that ensures consistent options

@@ -5,7 +5,7 @@ import {Col, Row} from 'antd';
 import {selectCompareStatus} from '@redux/compare';
 import {useAppSelector} from '@redux/hooks';
 
-import {TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
 
 import {ResourceSetSelector} from '../ResourceSetSelector';
 import CompareActionBar from './CompareActionBar';

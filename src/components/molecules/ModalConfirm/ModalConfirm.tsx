@@ -6,7 +6,7 @@ import * as S from './ModalConfirm.styled';
 
 interface IProps {
   isVisible: boolean;
-  text: string | JSX.Element;
+  text: string | React.JSX.Element;
   onOk: () => void;
   onCancel: () => void;
 }

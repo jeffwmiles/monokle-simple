@@ -3,7 +3,7 @@ import {ipcRenderer, shell} from 'electron';
 import React, {useEffect, useState} from 'react';
 
 import {Button, Form, Input, Modal} from 'antd';
-import {useForm} from 'antd/lib/form/Form';
+import {Form as AntdForm} from 'antd';
 
 import {PLUGIN_DOCS_URL} from '@constants/constants';
 
@@ -40,7 +40,7 @@ function PluginInstallModal(props: {isVisible: boolean; onClose: () => void}) {
   const [formValues, setFormValues] = useState({pluginUrl: ''});
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
-  const [pluginForm] = useForm();
+  const [pluginForm] = AntdForm.useForm();
   const [inputRef, focus] = useFocus<any>();
 
   const download = async (pluginUrl: string) => {

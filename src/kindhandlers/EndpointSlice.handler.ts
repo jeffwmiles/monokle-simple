@@ -1,8 +1,9 @@
-import * as k8s from '@kubernetes/client-node';
+import {disabledClusterOperations} from '@src/kindhandlers/common/disabledClusterOperations';
+
 
 import navSectionNames from '@constants/navSectionNames';
 
-import {ResourceMeta} from '@shared/models/k8sResource';
+
 import {ResourceKindHandler} from '@shared/models/resourceKindHandler';
 
 const EndpointSliceHandler: ResourceKindHandler = {
@@ -13,24 +14,9 @@ const EndpointSliceHandler: ResourceKindHandler = {
   clusterApiVersion: 'v1',
   validationSchemaPrefix: 'io.k8s.api.discovery.v1',
   isCustom: false,
-  getResourceFromCluster(kubeconfig: k8s.KubeConfig, resource: ResourceMeta): Promise<any> {
-    const discoveryV1Api = kubeconfig.makeApiClient(k8s.DiscoveryV1Api);
-    discoveryV1Api.setDefaultAuthentication(new k8s.VoidAuth());
-    return discoveryV1Api.readNamespacedEndpointSlice(resource.name, resource.namespace || 'default', 'true');
-  },
-  async listResourcesInCluster(kubeconfig: k8s.KubeConfig, {namespace}) {
-    const discoveryV1Api = kubeconfig.makeApiClient(k8s.DiscoveryV1Api);
-    discoveryV1Api.setDefaultAuthentication(new k8s.VoidAuth());
-    const response = namespace
-      ? await discoveryV1Api.listNamespacedEndpointSlice(namespace)
-      : await discoveryV1Api.listEndpointSliceForAllNamespaces();
-    return response.body.items;
-  },
-  async deleteResourceInCluster(kubeconfig: k8s.KubeConfig, resource: ResourceMeta) {
-    const discoveryV1Api = kubeconfig.makeApiClient(k8s.DiscoveryV1Api);
-    discoveryV1Api.setDefaultAuthentication(new k8s.VoidAuth());
-    await discoveryV1Api.deleteNamespacedEndpointSlice(resource.name, resource.namespace || 'default');
-  },
+  ...disabledClusterOperations,
+  
+  
   helpLink: 'https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.22/#endpointslice-v1-discovery-k8s-io',
 };
 

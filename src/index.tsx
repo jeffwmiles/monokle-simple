@@ -1,12 +1,16 @@
-import ReactDOM from 'react-dom';
+import type {ReactNode} from 'react';
+import {createRoot} from 'react-dom/client';
 import {ErrorBoundary} from 'react-error-boundary';
 import {Provider} from 'react-redux';
 
-import 'antd/dist/antd.less';
+import {ConfigProvider, theme} from 'antd';
+import 'antd/dist/reset.css';
 
 import 'allotment/dist/style.css';
+import isPropValid from '@emotion/is-prop-valid';
 import log from 'loglevel';
 import {machineIdSync} from 'node-machine-id';
+import {StyleSheetManager} from 'styled-components';
 
 import '@redux/ipcRendererRedux';
 import store from '@redux/store';
@@ -49,13 +53,31 @@ window.get_machine_id = () => {
 
 ignoreKnownErrors();
 
-ReactDOM.render(
+function RendererProviders({children}: {children: ReactNode}) {
+  return (
+    <StyleSheetManager shouldForwardProp={(prop, target) => typeof target !== 'string' || isPropValid(prop)}>
+      <ConfigProvider theme={{algorithm: theme.darkAlgorithm, token: {colorPrimary: '#177ddc', borderRadius: 4}}}>
+        {children}
+      </ConfigProvider>
+    </StyleSheetManager>
+  );
+}
+
+ConfigProvider.config({holderRender: children => <RendererProviders>{children}</RendererProviders>});
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Application root element is missing');
+}
+
+createRoot(rootElement).render(
   <Provider store={store}>
-    <ErrorBoundary FallbackComponent={ErrorPage}>
-      <App />
-    </ErrorBoundary>
-  </Provider>,
-  document.getElementById('root')
+    <RendererProviders>
+      <ErrorBoundary FallbackComponent={ErrorPage}>
+        <App />
+      </ErrorBoundary>
+    </RendererProviders>
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

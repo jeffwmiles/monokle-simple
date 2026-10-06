@@ -2,9 +2,8 @@ import {ipcRenderer} from 'electron';
 
 import fs from 'fs';
 import log from 'loglevel';
-import {JsonObject} from 'type-fest';
 
-export async function downloadJson(jsonData: JsonObject) {
+export async function downloadJson(jsonData: object) {
   try {
     const filePath = await ipcRenderer.invoke('save-file', {
       acceptedFileExtensions: ['json'],

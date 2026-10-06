@@ -11,7 +11,8 @@ import {SelectItemImage} from '@atoms';
 import {useProblemPaneMenuItems} from '@hooks/menuItemsHooks';
 import {usePaneHeight} from '@hooks/usePaneHeight';
 
-import {ProblemInfo, TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
+import { ProblemInfo } from "@components/foundation/validation";
 import {getRuleForResultV2} from '@monokle/validation';
 import {openUrlInExternalBrowser} from '@shared/utils';
 

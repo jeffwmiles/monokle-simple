@@ -18,7 +18,8 @@ interface CustomFallbackProps extends FallbackProps {
   hideBackButton?: boolean;
 }
 
-export const ErrorPage: React.FC<CustomFallbackProps> = ({hideBackButton, error}) => {
+export const ErrorPage: React.FC<CustomFallbackProps> = ({hideBackButton, error: caughtError}) => {
+  const error = caughtError instanceof Error ? caughtError : new Error(String(caughtError));
   const createGitHubIssue = useCallback(() => {
     const url = newGithubIssueUrl({
       user: 'kubeshop',

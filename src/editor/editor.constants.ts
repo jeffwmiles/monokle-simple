@@ -1,6 +1,6 @@
-import {monaco} from 'react-monaco-editor';
+import { monaco } from "@components/foundation/monaco";
 
-import {DiagnosticsOptions} from 'monaco-yaml';
+import type {MonacoYamlOptions} from 'monaco-yaml';
 
 import {Colors} from '@shared/styles/colors';
 
@@ -21,11 +21,11 @@ export const MONACO_EDITOR_INITIAL_CONFIG: monaco.editor.IStandaloneEditorConstr
   },
 };
 
-export const MONACO_YAML_BASE_DIAGNOSTICS_OPTIONS: DiagnosticsOptions = {
+export const MONACO_YAML_BASE_DIAGNOSTICS_OPTIONS: MonacoYamlOptions = {
   enableSchemaRequest: true,
   hover: true,
   completion: true,
-  format: true,
+  format: {enable: true},
 };
 
 export const MODEL_OWNER = 'monokle';

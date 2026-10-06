@@ -2,7 +2,7 @@ import {Button as AntdButton} from 'antd';
 
 import styled from 'styled-components';
 
-import {Icon as BaseIcon} from '@monokle/components';
+import { Icon as BaseIcon } from "@components/foundation/primitives";
 import {Colors} from '@shared/styles/colors';
 
 export const Heading = styled.div`

@@ -37,8 +37,7 @@ export function FilterPopover({filter, onChange, disabled}: Props) {
           disabled={disabled}
           icon={<FilterOutlined />}
           type="link"
-          color={filterCount > 0 ? Colors.greenOkay : undefined}
-          style={{marginLeft: 8}}
+          style={{marginLeft: 8, color: filterCount > 0 ? Colors.greenOkay : undefined}}
         />
       </Badge>
     ),

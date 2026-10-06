@@ -1,6 +1,5 @@
 import {BrowserWindow, app, nativeImage} from 'electron';
 
-import indexOf from 'lodash/indexOf';
 import * as path from 'path';
 
 import {APP_MIN_HEIGHT, APP_MIN_WIDTH, NEW_VERSION_CHECK_INTERVAL} from '@shared/constants/app';
@@ -41,7 +40,7 @@ const pluginsDir = path.join(userDataDir, 'monoklePlugins');
 const templatesDir = path.join(userDataDir, 'monokleTemplates');
 const crdsDir = path.join(userDataDir, 'savedCRDs');
 const templatePacksDir = path.join(userDataDir, 'monokleTemplatePacks');
-const APP_DEPENDENCIES = ['kubectl', 'helm', 'kustomize', 'git'];
+const APP_DEPENDENCIES = ['helm'];
 
 export const createWindow = (givenPath?: string) => {
   const iconPath = isDev ? path.join('resources', 'icon.ico') : path.join(process.resourcesPath, 'icon.ico');
@@ -54,6 +53,7 @@ export const createWindow = (givenPath?: string) => {
     title: 'Monokle',
     icon: image,
     webPreferences: {
+      preload: path.join(app.getAppPath(), 'build', 'electron', 'preload.cjs'),
       zoomFactor: utilsElectronStore.get('ui.zoomFactor'),
       webSecurity: false,
       contextIsolation: false,
@@ -64,8 +64,8 @@ export const createWindow = (givenPath?: string) => {
   const splashscreenConfig: Splashscreen.Config = {
     windowOpts: mainBrowserWindowOptions,
     templateUrl: isDev
-      ? path.normalize(`${__dirname}/../../../public/Splashscreen.html`)
-      : path.normalize(`${__dirname}/../../Splashscreen.html`),
+      ? path.join(app.getAppPath(), 'public', 'Splashscreen.html')
+      : path.join(app.getAppPath(), 'build', 'Splashscreen.html'),
     delay: 0,
     splashScreenOpts: {
       width: 1200,
@@ -78,30 +78,16 @@ export const createWindow = (givenPath?: string) => {
   let unsavedResourceCount = 0;
 
   if (isDev) {
-    win.loadURL('http://localhost:3000/index.html');
+    win.loadURL(`http://127.0.0.1:${process.env.MONOKLE_DEV_PORT || 5173}/`);
   } else {
     // 'build/index.html'
-    win.loadURL(`file://${__dirname}/../../index.html`);
+    win.loadFile(path.join(app.getAppPath(), 'build', 'index.html'));
   }
 
   // Hot Reloading
   if (isDev) {
     win.webContents.setVisualZoomLevelLimits(1, 5);
 
-    // eslint-disable-next-line global-require
-    require('electron-reload')(__dirname, {
-      electron: path.join(
-        __dirname,
-        '..',
-        '..',
-        '..',
-        'node_modules',
-        '.bin',
-        `electron${process.platform === 'win32' ? '.cmd' : ''}`
-      ),
-      forceHardReset: true,
-      hardResetMethod: 'quit',
-    });
   }
 
   autoUpdater.on('update-available', () => {
@@ -192,11 +178,6 @@ export const createWindow = (givenPath?: string) => {
     dispatch({type: 'main/setAppRehydrating', payload: false});
 
     const missingDependencies = checkMissingDependencies(APP_DEPENDENCIES);
-    const isUserAbleToRunKubectlKustomize = checkMissingDependencies(['kubectl kustomize --help']);
-
-    if (missingDependencies.includes('kustomize') && isUserAbleToRunKubectlKustomize) {
-      missingDependencies.splice(indexOf(missingDependencies, 'kustomize'), 1);
-    }
 
     if (missingDependencies.length > 0) {
       const alert: AlertType = {

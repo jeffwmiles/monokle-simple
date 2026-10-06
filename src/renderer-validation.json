@@ -1,0 +1,21 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@components/*": ["./components/*"], "@components": ["./components/"],
+      "@constants/*": ["./constants/*"], "@constants": ["./constants/"],
+      "@atoms/*": ["./components/atoms/*"], "@atoms": ["./components/atoms/"],
+      "@organisms/*": ["./components/organisms/*"], "@organisms": ["./components/organisms/"],
+      "@molecules/*": ["./components/molecules/*"], "@molecules": ["./components/molecules/"],
+      "@hooks/*": ["./hooks/*"], "@hooks": ["./hooks"],
+      "@redux/*": ["./redux/*"], "@redux": ["./redux/"],
+      "@actions/*": ["./actions/*"], "@actions": ["./actions/"],
+      "@assets/*": ["./assets/*"], "@assets": ["./assets/"],
+      "@utils/*": ["./utils/*"], "@utils": ["./utils/"],
+      "@shared/*": ["./shared/*"], "@shared": ["./shared/"],
+      "@editor/*": ["./editor/*"], "@editor": ["./editor/"],
+      "@src/*": ["./*"], "@src": ["./"],
+      "@root/*": ["../*"], "@root": ["../"]
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import {useCallback, useMemo} from 'react';
 
 import {Switch, Tooltip} from 'antd';
-import {ColumnsType} from 'antd/lib/table';
+import type {TableColumnsType as ColumnsType} from 'antd';
 
 import styled from 'styled-components';
 
@@ -10,7 +10,7 @@ import {TOOLTIP_DELAY} from '@constants/constants';
 import {useAppDispatch} from '@redux/hooks';
 import {changeRuleLevel, toggleRule} from '@redux/validation/validation.slice';
 
-import {Icon, IconNames} from '@monokle/components';
+import { Icon, IconNames } from "@components/foundation/primitives";
 import {PluginMetadataWithConfig} from '@monokle/validation';
 import {Colors} from '@shared/styles/colors';
 import {trackEvent} from '@shared/utils/telemetry';

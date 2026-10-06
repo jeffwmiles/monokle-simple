@@ -1,4 +1,4 @@
-import {ReactMarkdown} from 'react-markdown/lib/react-markdown';
+import ReactMarkdown from 'react-markdown';
 import {useAsync} from 'react-use';
 
 import {Skeleton, Typography} from 'antd';

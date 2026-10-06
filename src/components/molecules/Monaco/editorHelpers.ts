@@ -1,13 +1,13 @@
-import {monaco} from 'react-monaco-editor';
+import { monaco } from "@components/foundation/monaco";
 
 // @ts-ignore
-import {ILanguageFeaturesService} from 'monaco-editor/esm/vs/editor/common/services/languageFeatures.js';
+import {ILanguageFeaturesService} from 'monaco-editor/editor/common/services/languageFeatures.js';
 // @ts-ignore
-import {OutlineModel} from 'monaco-editor/esm/vs/editor/contrib/documentSymbols/browser/outlineModel.js';
+import {OutlineModel} from 'monaco-editor/editor/contrib/documentSymbols/browser/outlineModel.js';
 // @ts-ignore
-import {StandaloneServices} from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices.js';
+import {StandaloneServices} from 'monaco-editor/editor/standalone/browser/standaloneServices.js';
 // @ts-ignore
-import {CommandsRegistry} from 'monaco-editor/esm/vs/platform/commands/common/commands';
+import {CommandsRegistry} from 'monaco-editor/platform/commands/common/commands';
 import {v4 as uuidv4} from 'uuid';
 
 import {

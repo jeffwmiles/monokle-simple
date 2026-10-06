@@ -206,11 +206,20 @@ export function processHelmChartFolder(
       const filePath = path.join(folder, file);
       const extension = path.extname(filePath);
       const fileEntryPath = filePath.substring(rootFolder.length);
-      const fileEntry = createFileEntry({fileEntryPath, fileMap, helmChartId: helmChart?.id, extension, projectConfig});
+      const stats = getFileStats(filePath);
+      if (!stats) return;
+      const fileEntry = createFileEntry({
+        fileEntryPath,
+        fileMap,
+        helmChartId: helmChart?.id,
+        extension,
+        projectConfig,
+        stats,
+      });
 
       if (fileIsExcluded(fileEntry.filePath, projectConfig)) {
         fileEntry.isExcluded = true;
-      } else if (getFileStats(filePath)?.isDirectory()) {
+      } else if (stats.isDirectory()) {
         const folderReadsMaxDepth = projectConfig.folderReadsMaxDepth;
 
         if (depth === folderReadsMaxDepth) {

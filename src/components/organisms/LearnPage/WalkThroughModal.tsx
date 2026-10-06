@@ -7,7 +7,8 @@ import styled from 'styled-components';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setStartPageLearnTopic} from '@redux/reducers/ui';
 
-import {Icon as RawIcon, WalkThrough, WalkThroughCard} from '@monokle/components';
+import { Icon as RawIcon } from "@components/foundation/primitives";
+import { WalkThrough, WalkThroughCard } from "@components/foundation/walkthrough";
 import {WALK_THROUGH_STEPS} from '@shared/constants/walkthrough';
 import {Colors} from '@shared/styles';
 
@@ -23,7 +24,6 @@ const WalkThroughModal = () => {
         <WalkThroughCard
           heading="Explore"
           onFinish={dismissWalkThrough}
-          mediaItems={WALK_THROUGH_STEPS[topic]}
           items={[
             <WalkThroughCard.Slice>
               <WalkThroughCard.SubHeading>1. Your K8s workspace</WalkThroughCard.SubHeading>
@@ -36,20 +36,16 @@ const WalkThroughModal = () => {
             </WalkThroughCard.Slice>,
 
             <WalkThroughCard.Slice>
-              <WalkThroughCard.SubHeading>2. Preview Helm charts & Kustomization</WalkThroughCard.SubHeading>
+              <WalkThroughCard.SubHeading>2. Preview Helm charts</WalkThroughCard.SubHeading>
               <WalkThroughCard.Text>
-                We find and show Helm charts and Kustomization found on your projects. Also, you can preview them, see &
-                fix errors and more.
+                Browse charts in your project, select values files and render resources locally to inspect and validate them.
               </WalkThroughCard.Text>
             </WalkThroughCard.Slice>,
 
             <WalkThroughCard.Slice>
-              <WalkThroughCard.SubHeading>3. Quickly connect to cluster</WalkThroughCard.SubHeading>
+              <WalkThroughCard.SubHeading>3. Inspect rendered resources</WalkThroughCard.SubHeading>
               <WalkThroughCard.Text>
-                Click
-                <Icon name="cluster-dashboard" />
-                on the left menu to quickly connect your cluster (no project creation needed) and have a dedicated
-                dashboard with live activity, incidences, resources, performance, errors and more.
+                Use the resource navigator, validation pane and resource graph to review the output of a Helm dry-run.
               </WalkThroughCard.Text>
             </WalkThroughCard.Slice>,
           ]}
@@ -60,7 +56,6 @@ const WalkThroughModal = () => {
         <WalkThroughCard
           heading="Edit"
           onFinish={dismissWalkThrough}
-          mediaItems={WALK_THROUGH_STEPS[topic]}
           items={[
             <WalkThroughCard.Slice>
               <WalkThroughCard.SubHeading>1. Templates & Forms</WalkThroughCard.SubHeading>
@@ -82,11 +77,10 @@ const WalkThroughModal = () => {
             <WalkThroughCard.Slice>
               <WalkThroughCard.SubHeading>2. Compare & sync</WalkThroughCard.SubHeading>
               <WalkThroughCard.Text>
-                Try this dedicated utility to compare resources that are at any stage of the k8s lifecycle: local,
-                cluster, previews, on git...
+                Compare local manifests and rendered previews before saving changes.
               </WalkThroughCard.Text>
               <WalkThroughCard.Text>
-                You can promote, deploy or commit changes made, or take to local anything published.
+                Review differences between values configurations and copy the resources you need into your project.
               </WalkThroughCard.Text>
             </WalkThroughCard.Slice>,
           ]}
@@ -128,45 +122,20 @@ const WalkThroughModal = () => {
 
       {topic === 'publish' && (
         <WalkThroughCard
-          heading="Publish"
+          heading="Save & export"
           onFinish={dismissWalkThrough}
-          mediaItems={WALK_THROUGH_STEPS[topic]}
           items={[
             <WalkThroughCard.Slice>
-              <WalkThroughCard.SubHeading>1. Git</WalkThroughCard.SubHeading>
+              <WalkThroughCard.SubHeading>1. Save locally</WalkThroughCard.SubHeading>
               <WalkThroughCard.Text>
-                Take your changes management into the Git workflow - for any project. You can:
+                Save edited manifests and Helm values in your project folder. Review validation results before saving.
               </WalkThroughCard.Text>
-              <ul>
-                <li>
-                  <WalkThroughCard.Text>
-                    <WalkThroughCard.Text $bold>Get your local files to git</WalkThroughCard.Text> with 1 click.
-                  </WalkThroughCard.Text>
-                </li>
-                <li>
-                  <WalkThroughCard.Text>
-                    <WalkThroughCard.Text $bold>Manage branches</WalkThroughCard.Text> from the top bar.
-                  </WalkThroughCard.Text>
-                </li>
-                <li>
-                  <WalkThroughCard.Text>
-                    <WalkThroughCard.Text $bold>Create PRs, commit, push, stage/unstage...</WalkThroughCard.Text>
-                    &nbsp;in a nutshell, everything git. Find it all in
-                  </WalkThroughCard.Text>
-                </li>
-              </ul>
             </WalkThroughCard.Slice>,
 
             <WalkThroughCard.Slice>
-              <WalkThroughCard.SubHeading>2. Cluster</WalkThroughCard.SubHeading>
-              <WalkThroughCard.Text>Connect & manage as many clusters as you want:</WalkThroughCard.Text>
+              <WalkThroughCard.SubHeading>2. Export Helm output</WalkThroughCard.SubHeading>
               <WalkThroughCard.Text>
-                <WalkThroughCard.Text $bold>Deploy </WalkThroughCard.Text>any change or state of your resources to the
-                cluster anytime.
-              </WalkThroughCard.Text>
-              <WalkThroughCard.Text>
-                <WalkThroughCard.Text $bold>Configure a different accent color </WalkThroughCard.Text>for each one of
-                your clusters for easier differentiation.
+                Render a chart with your selected values and save the resulting resources to a local file or folder.
               </WalkThroughCard.Text>
             </WalkThroughCard.Slice>,
           ]}

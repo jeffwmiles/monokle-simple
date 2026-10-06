@@ -1,7 +1,7 @@
 import * as monaco from 'monaco-editor';
-import {ILanguageFeaturesService} from 'monaco-editor/esm/vs/editor/common/services/languageFeatures.js';
-import {OutlineModel} from 'monaco-editor/esm/vs/editor/contrib/documentSymbols/browser/outlineModel.js';
-import {StandaloneServices} from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices.js';
+import {ILanguageFeaturesService} from 'monaco-editor/editor/common/services/languageFeatures.js';
+import {OutlineModel} from 'monaco-editor/editor/contrib/documentSymbols/browser/outlineModel.js';
+import {StandaloneServices} from 'monaco-editor/editor/standalone/browser/standaloneServices.js';
 
 import {
   GlyphDecorationTypes,

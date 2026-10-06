@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import {PANEL_HEADER_HEIGHT} from '@components/atoms/AccordionPanel/AccordionPanel';
 
-import {Colors, PanelColors} from '@monokle/components';
+import { Colors, PanelColors } from "@components/foundation/primitives";
 
 import DryRunsPane from './DryRunsPane';
 import FilePane from './FilePane';

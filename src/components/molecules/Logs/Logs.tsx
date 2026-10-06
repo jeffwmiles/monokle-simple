@@ -12,7 +12,7 @@ import {v4 as uuidv4} from 'uuid';
 import {useAppSelector} from '@redux/hooks';
 import {useSelectedResource} from '@redux/selectors/resourceSelectors';
 
-import {SearchInput} from '@monokle/components';
+import { SearchInput } from "@components/foundation/primitives";
 import {Colors} from '@shared/styles/colors';
 import {selectKubeconfig} from '@shared/utils/cluster/selectors';
 import {createKubeClient} from '@shared/utils/kubeclient';

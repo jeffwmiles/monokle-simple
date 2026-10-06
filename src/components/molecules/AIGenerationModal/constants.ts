@@ -1,4 +1,4 @@
-import {monaco} from 'react-monaco-editor';
+import { monaco } from "@components/foundation/monaco";
 
 export const GENERATION_ERROR_MESSAGE = 'No resource content was generated. Please try to give a better description.';
 

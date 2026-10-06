@@ -1,8 +1,9 @@
+import ElectronStore from 'electron-store';
+
 import {electronStoreDefaults, electronStoreSchema} from '../constants/electronStore';
+import type {ElectronStoreData} from '../constants/electronStore';
 
-const ElectronStore = require('electron-store');
-
-const electronStore = new ElectronStore({
+const electronStore = new ElectronStore<ElectronStoreData>({
   schema: electronStoreSchema,
   defaults: electronStoreDefaults,
 });

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import {PrimaryButton} from '@atoms';
 
-import {Icon as BaseIcon} from '@monokle/components';
+import { Icon as BaseIcon } from "@components/foundation/primitives";
 import {Colors} from '@shared/styles/colors';
 import {Device} from '@shared/styles/device';
 

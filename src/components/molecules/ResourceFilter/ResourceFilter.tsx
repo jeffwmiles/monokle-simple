@@ -25,7 +25,7 @@ import {useNamespaces} from '@hooks/useNamespaces';
 
 import {useWindowSize} from '@utils/hooks';
 
-import {Filter, FilterButton, FilterField, FilterHeader, KeyValueInput, NewKeyValueInput} from '@monokle/components';
+import { Filter, FilterButton, FilterField, FilterHeader, KeyValueInput, NewKeyValueInput } from "@components/foundation/primitives";
 import {ROOT_FILE_ENTRY} from '@shared/constants/fileEntry';
 import {ResourceFilterType} from '@shared/models/appState';
 import {isEqual} from '@shared/utils/isEqual';

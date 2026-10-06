@@ -5,7 +5,7 @@ import {useResourceContentMap, useResourceMetaMap} from '@redux/selectors/resour
 import {joinK8sResourceMap} from '@redux/services/resource';
 import {problemsByResourceSelector, useValidationSelector} from '@redux/validation/validation.selectors';
 
-import {ResourceGraph} from '@monokle/components';
+import { ResourceGraph } from "@components/foundation/resourceGraph";
 import {RuleLevel} from '@monokle/validation';
 import {K8sResource, ResourceMeta} from '@shared/models/k8sResource';
 
@@ -39,10 +39,6 @@ const GraphTab: React.FC<IProps> = props => {
     [clusterConnectionNamespace]
   );
 
-  const elkWorker = useMemo(() => {
-    return new Worker(new URL('elkjs/lib/elk-worker.min.js', import.meta.url));
-  }, []);
-
   const getProblemsForResource = useCallback(
     (id: string, level: RuleLevel) => problemsByResourceSelector(validationState, id, level),
     [validationState]
@@ -56,7 +52,6 @@ const GraphTab: React.FC<IProps> = props => {
     <ResourceGraph
       resources={[resource] as any}
       resourceMap={resourceMap as any}
-      elkWorker={elkWorker}
       defaultNamespace={defaultNamespace}
       getProblemsForResource={getProblemsForResource}
     />

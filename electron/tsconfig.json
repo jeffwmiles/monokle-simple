@@ -1,15 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es2021",
-    "module": "commonjs",
-    "sourceMap": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "strict": true,
-    "outDir": "../build",
     "rootDir": "../",
-    "baseUrl": "../",
-    "noEmitOnError": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["node", "jest"],
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
+  "include": ["./**/*.ts", "../src/types.d.ts"],
+  "exclude": ["../node_modules", "../build", "../dist", "../.toolchain"],
   "extends": "../tsconfig.paths.json"
 }

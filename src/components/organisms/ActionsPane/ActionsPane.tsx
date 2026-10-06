@@ -55,7 +55,7 @@ import CodeEditor from '@src/editor/CodeEditor';
 import {getResourceKindHandler} from '@src/kindhandlers';
 import {extractFormSchema} from '@src/kindhandlers/common/customObjectKindHandler';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
 import {ActionPaneTab} from '@shared/models/appState';
 import {HelmChart} from '@shared/models/helm';
 import {trackEvent} from '@shared/utils';
@@ -107,7 +107,7 @@ const ActionsPane: React.FC = () => {
 
   // Could not get the ref of Tabs Component
   const tabsList = document.getElementsByClassName('ant-tabs-nav-list');
-  const extraButton = useRef<any>();
+  const extraButton = useRef<any | undefined>(undefined);
   const [actionsPaneRef, {width: actionsPaneWidth}] = useMeasure<HTMLDivElement>();
 
   const getDistanceBetweenTwoComponents = useCallback(() => {

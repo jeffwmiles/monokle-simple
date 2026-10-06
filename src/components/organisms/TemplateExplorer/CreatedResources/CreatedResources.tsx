@@ -1,7 +1,7 @@
 import {useState} from 'react';
 
 import {Button, Tag} from 'antd';
-import Link from 'antd/lib/typography/Link';
+import {Typography as AntdTypography} from 'antd';
 
 import {SelectOutlined} from '@ant-design/icons';
 
@@ -12,11 +12,13 @@ import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {selectResource} from '@redux/reducers/main';
 import {closeTemplateExplorer, setSelectedTemplatePath} from '@redux/reducers/ui';
 
-import {TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
 import {K8sResource} from '@shared/models/k8sResource';
 
 import * as S from './CreatedResources.styled';
 import SaveToFolderModal from './SaveToFolderModal';
+
+const Link = AntdTypography.Link;
 
 type IProps = {
   createdResources: K8sResource[];
@@ -94,7 +96,7 @@ const CreatedResources: React.FC<IProps> = props => {
               );
             })}
           </ul>
-          <Button type="ghost" onClick={onClickSaveToFolder}>
+          <Button ghost onClick={onClickSaveToFolder}>
             Save resources to folder
           </Button>
         </>

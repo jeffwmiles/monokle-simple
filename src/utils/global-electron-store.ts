@@ -19,7 +19,7 @@ interface ActionResult<T> {
 }
 
 interface ElectronStoreChangePropagate<P, T> {
-  keyName: string;
+  keyName: 'appConfig.projects';
   action: (oldData: P, newData: P) => ActionResult<T>;
 }
 
@@ -48,4 +48,4 @@ const projectNameChange: ElectronStoreChangePropagate<Project[], ProjectNameChan
   },
 };
 
-export const globalElectronStoreChanges: ElectronStoreChangePropagate<any, any>[] = [projectNameChange];
+export const globalElectronStoreChanges = [projectNameChange];

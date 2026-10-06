@@ -1,15 +1,16 @@
 import React from 'react';
 
 import {Button, Popover} from 'antd';
+import type {ButtonProps, PopoverProps} from 'antd';
 
-import {Icon, IconNames} from '@monokle/components';
+import { Icon, IconNames } from "@components/foundation/primitives";
 
 interface IconWithPopoverProps {
   popoverContent: React.ReactNode | (() => React.ReactNode);
-  popoverTrigger: string | string[];
+  popoverTrigger: PopoverProps['trigger'];
   isDisabled?: boolean;
   iconName?: IconNames;
-  buttonType?: 'default' | 'primary' | 'ghost' | 'dashed' | 'link' | 'text';
+  buttonType?: ButtonProps['type'] | 'ghost';
   iconComponent: React.ReactNode;
 }
 
@@ -20,7 +21,7 @@ const IconWithPopover: React.FC<IconWithPopoverProps> = props => {
 
   return (
     <Popover content={isDisabled ? <span>Filter is disabled</span> : popoverContent} trigger={popoverTrigger}>
-      <Button disabled={isDisabled} type={buttonType} size="small" icon={iconToDisplay} />
+      <Button disabled={isDisabled} type={buttonType === 'ghost' ? 'default' : buttonType} ghost={buttonType === 'ghost'} size="small" icon={iconToDisplay} />
     </Popover>
   );
 };

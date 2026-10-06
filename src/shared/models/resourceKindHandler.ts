@@ -1,6 +1,6 @@
 import * as k8s from '@kubernetes/client-node';
 
-import {monaco} from 'react-monaco-editor';
+import { monaco } from "@components/foundation/monaco";
 
 import {K8sResource, ResourceMeta} from './k8sResource';
 

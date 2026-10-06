@@ -1,6 +1,8 @@
-import {createWriteStream, existsSync, promises, readdirSync, statSync, unlinkSync} from 'fs';
-import fetch from 'node-fetch';
+import {createWriteStream, promises, readdirSync, statSync} from 'fs';
 import {join, sep} from 'path';
+import {Readable} from 'stream';
+import {pipeline} from 'stream/promises';
+import type {ReadableStream} from 'stream/web';
 
 export function deleteFolder(folderPath: string) {
   return promises.rm(folderPath, {recursive: true});
@@ -72,29 +74,20 @@ export async function downloadFile(sourceUrl: string, destinationFilePath: strin
   const response = await fetch(sourceUrl);
 
   if (!response.ok) {
-    throw new Error(`Downdload error: ${response.status} ${response.statusText}`);
+    throw new Error(`Download error: ${response.status} ${response.statusText}`);
   }
 
-  return new Promise<void>((resolve, reject) => {
-    const fileStream = createWriteStream(destinationFilePath);
+  if (!response.body) {
+    throw new Error('Download error: missing response body.');
+  }
 
-    if (!response.body) {
-      throw new Error(`Download error: missing response body.`);
-    }
-
-    response.body.pipe(fileStream);
-
-    response.body.on('error', err => {
-      fileStream.close();
-      if (existsSync(destinationFilePath) && statSync(destinationFilePath).isFile()) {
-        unlinkSync(destinationFilePath);
-      }
-      reject(err);
-    });
-
-    fileStream.on('finish', () => {
-      fileStream.close();
-      resolve();
-    });
-  });
+  try {
+    await pipeline(
+      Readable.fromWeb(response.body as ReadableStream<Uint8Array>),
+      createWriteStream(destinationFilePath)
+    );
+  } catch (error) {
+    await promises.rm(destinationFilePath, {force: true}).catch(() => undefined);
+    throw error;
+  }
 }

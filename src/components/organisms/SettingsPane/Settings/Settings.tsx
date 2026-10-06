@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDebounce} from 'react-use';
 
 import {Button, Checkbox, Form, Input, InputNumber, InputRef, Select, Tooltip} from 'antd';
-import {useForm} from 'antd/lib/form/Form';
+import {Form as AntdForm} from 'antd';
 
 import _ from 'lodash';
 import log from 'loglevel';
@@ -33,6 +33,7 @@ import {useFileExplorer} from '@hooks/useFileExplorer';
 import {useFocus, useStateWithRef} from '@utils/hooks';
 import {doesSchemaExist} from '@utils/index';
 
+import {LIVE_CLUSTERS_ENABLED} from '@shared/constants/capabilities';
 import {ROOT_FILE_ENTRY} from '@shared/constants/fileEntry';
 import {K8S_VERSIONS} from '@shared/constants/k8s';
 import {ProjectConfig} from '@shared/models/config';
@@ -59,7 +60,7 @@ export const Settings = ({
   showProjectName,
 }: SettingsProps) => {
   const dispatch = useAppDispatch();
-  const [settingsForm] = useForm();
+  const [settingsForm] = AntdForm.useForm();
 
   const kubeConfig = useAppSelector(selectKubeconfig);
   const isScanIncludesUpdated = useAppSelector(state => state.config.isScanIncludesUpdated);
@@ -283,34 +284,36 @@ export const Settings = ({
             </Form.Item>
           </Form>
         )}
-        <S.Div>
-          <S.Heading>
-            KUBECONFIG
-            {isClusterActionDisabled && wasRehydrated && (
-              <S.WarningOutlined $isKubeconfigPathValid={Boolean(kubeConfig?.isValid)} />
-            )}
-          </S.Heading>
+        {LIVE_CLUSTERS_ENABLED && (
+          <S.Div>
+            <S.Heading>
+              KUBECONFIG
+              {isClusterActionDisabled && wasRehydrated && (
+                <S.WarningOutlined $isKubeconfigPathValid={Boolean(kubeConfig?.isValid)} />
+              )}
+            </S.Heading>
 
-          <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={KubeconfigPathTooltip}>
-            <Input
-              ref={inputRef}
-              onClick={() => focusInput()}
-              value={currentKubeConfigPath}
-              onChange={onUpdateKubeconfig}
-              disabled={isEditingDisabled}
-            />
-          </Tooltip>
+            <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={KubeconfigPathTooltip}>
+              <Input
+                ref={inputRef}
+                onClick={() => focusInput()}
+                value={currentKubeConfigPath}
+                onChange={onUpdateKubeconfig}
+                disabled={isEditingDisabled}
+              />
+            </Tooltip>
 
-          <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={BrowseKubeconfigTooltip} placement="right">
-            <S.Button
-              onClick={openFileSelect}
-              disabled={isEditingDisabled || isKubeConfigBrowseLoading}
-              loading={isKubeConfigBrowseLoading}
-            >
-              Browse
-            </S.Button>
-          </Tooltip>
-        </S.Div>
+            <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={BrowseKubeconfigTooltip} placement="right">
+              <S.Button
+                onClick={openFileSelect}
+                disabled={isEditingDisabled || isKubeConfigBrowseLoading}
+                loading={isKubeConfigBrowseLoading}
+              >
+                Browse
+              </S.Button>
+            </Tooltip>
+          </S.Div>
+        )}
 
         <S.Div>
           <S.Span>Kubernetes Version</S.Span>
@@ -374,13 +377,8 @@ export const Settings = ({
         <S.Div>
           <S.Span>Helm Preview Mode</S.Span>
           <Tooltip mouseEnterDelay={TOOLTIP_DELAY} title={HelmPreviewModeTooltip}>
-            <Select
-              style={{width: '100%'}}
-              value={localConfig?.settings?.helmPreviewMode}
-              onChange={onChangeHelmPreviewMode}
-            >
+            <Select style={{width: '100%'}} value="template" disabled onChange={onChangeHelmPreviewMode}>
               <Select.Option value="template">Template</Select.Option>
-              <Select.Option value="install">Install</Select.Option>
             </Select>
           </Tooltip>
         </S.Div>

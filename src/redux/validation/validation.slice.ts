@@ -6,7 +6,7 @@ import {connectCluster} from '@redux/cluster/thunks/connect';
 import {stopClusterConnection} from '@redux/thunks/cluster';
 import {setRootFolder} from '@redux/thunks/setRootFolder';
 
-import {ValidationFiltersValueType} from '@monokle/components';
+import { ValidationFiltersValueType } from "@components/foundation/validation";
 import {CORE_PLUGINS, PluginMetadataWithConfig} from '@monokle/validation';
 import {SelectedProblem, ValidationState} from '@shared/models/validation';
 import {CustomValidationPlugin} from '@shared/models/validationPlugins';

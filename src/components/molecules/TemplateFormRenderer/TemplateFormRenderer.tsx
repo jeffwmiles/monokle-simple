@@ -6,7 +6,6 @@ import {Button, Skeleton} from 'antd';
 
 import {ExportOutlined} from '@ant-design/icons';
 
-// @ts-ignore
 import {Theme as AntDTheme} from '@rjsf/antd';
 import {withTheme} from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';

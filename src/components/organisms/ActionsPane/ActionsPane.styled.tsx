@@ -73,8 +73,15 @@ export const Tabs = styled(RawTabs)<{$height: number}>`
     border-bottom: none;
   }
 
+  & .ant-tabs-body-holder {
+    flex: 1;
+    min-height: 0;
+  }
+
+  & .ant-tabs-body,
   & .ant-tabs-content {
-    height: ${({$height}) => $height - 46}px;
+    height: 100%;
+    min-height: 0;
   }
 
   & .ant-tabs-extra-content {

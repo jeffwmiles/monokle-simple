@@ -12,7 +12,7 @@ import {restartPreview, stopPreview} from '@redux/thunks/preview';
 
 import {TitleBarWrapper} from '@components/atoms';
 
-import {Icon, TitleBar} from '@monokle/components';
+import { Icon, TitleBar } from "@components/foundation/primitives";
 import {Colors} from '@shared/styles';
 
 import NavigatorDescription from './NavigatorDescription';

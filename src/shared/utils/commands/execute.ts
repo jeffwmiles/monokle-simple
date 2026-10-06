@@ -1,36 +1,27 @@
-import {ipcRenderer} from 'electron';
-
-import log from 'loglevel';
+import electron from 'electron';
 
 import {ERROR_MSG_FALLBACK} from '@shared/constants/constants';
 import {CommandOptions, CommandResult} from '@shared/models/commands';
 import {isDefined} from '@shared/utils/filter';
+import {localHelmArgs} from '@shared/utils/helmOnly';
 import {ensureRendererThread} from '@shared/utils/thread';
 
 import electronStore from '../electronStore';
 
-export function runCommandInMainThread(options: CommandOptions): Promise<CommandResult> {
+export async function runCommandInMainThread(options: CommandOptions): Promise<CommandResult> {
+  const executable = electronStore.get('appConfig.binaryPaths')?.helm || 'helm';
+  const command = options.cmd === 'helm' ? {...options, cmd: executable} : options;
+  localHelmArgs(command, executable);
   ensureRendererThread();
-  log.info('sending command to main thread', options);
-
-  const binaryPaths = electronStore.get('appConfig.binaryPaths');
-  if (binaryPaths) {
-    if (typeof binaryPaths.kubectl === 'string' && options.cmd.startsWith('kubectl')) {
-      options.cmd = options.cmd.replace('kubectl', binaryPaths.kubectl);
-    }
-    if (typeof binaryPaths.helm === 'string' && options.cmd.startsWith('helm')) {
-      options.cmd = options.cmd.replace('helm', binaryPaths.helm);
-    }
-  }
 
   return new Promise<CommandResult>(resolve => {
-    const cb = (_event: unknown, arg: CommandResult) => {
-      if (arg.commandId !== options.commandId) return;
-      ipcRenderer.off('command-result', cb);
-      resolve(arg);
+    const callback = (_event: unknown, result: CommandResult) => {
+      if (result.commandId !== command.commandId) return;
+      electron.ipcRenderer.off('command-result', callback);
+      resolve(result);
     };
-    ipcRenderer.on('command-result', cb);
-    ipcRenderer.send('run-command', options);
+    electron.ipcRenderer.on('command-result', callback);
+    electron.ipcRenderer.send('run-command', command);
   });
 }
 

@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react';
 
-import {ItemType} from 'antd/lib/menu/hooks/useItems';
+import type {MenuProps as AntdMenuProps} from 'antd';
 
 import {useAppDispatch} from '@redux/hooks';
 import {openNewResourceWizard} from '@redux/reducers/ui';
@@ -11,6 +11,8 @@ import {ResourceKindHandler} from '@shared/models/resourceKindHandler';
 import {NewResourceWizardInput} from '@shared/models/ui';
 
 import * as S from './CRDItem.styled';
+
+type ItemType = NonNullable<AntdMenuProps['items']>[number];
 
 type IProps = {
   crd: ResourceKindHandler;

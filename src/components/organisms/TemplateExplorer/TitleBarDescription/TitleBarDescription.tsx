@@ -1,4 +1,4 @@
-import Link from 'antd/lib/typography/Link';
+import {Typography as AntdTypography} from 'antd';
 
 import {useAppDispatch} from '@redux/hooks';
 import {closeTemplateExplorer, setActiveSettingsPanel, setStartPageMenuOption} from '@redux/reducers/ui';
@@ -8,6 +8,8 @@ import TemplateExplorerDescription from '@assets/TemplateExplorerDescription.svg
 import {SettingsPanel} from '@shared/models/config';
 
 import * as S from './TitleBarDescription.styled';
+
+const Link = AntdTypography.Link;
 
 const TitleBarDescription: React.FC = () => {
   const dispatch = useAppDispatch();

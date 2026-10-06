@@ -24,7 +24,7 @@ export const TelemetryButtons = ({notificationId}: {notificationId?: string}) =>
     );
 
     if (notificationId) {
-      notification.close(notificationId);
+      notification.destroy(notificationId);
     }
   };
 

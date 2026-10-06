@@ -2,7 +2,7 @@ import log from 'electron-log';
 
 import {readFileSync} from 'fs';
 import path from 'path';
-import tar from 'tar';
+import {extract} from 'tar';
 
 import {
   createOrRecreateFolder,
@@ -54,7 +54,7 @@ async function downloadExtension<ExtensionEntryType, ExtensionType>(
 
   await downloadFile(extensionTarballUrl, tarballFilePath);
 
-  await tar.extract({
+  await extract({
     file: tarballFilePath,
     cwd: extensionFolderPath,
     strip: 1,

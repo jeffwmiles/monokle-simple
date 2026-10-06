@@ -5,7 +5,7 @@ import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setLeftBottomMenuSelection, setLeftMenuIsActive, setLeftMenuSelection} from '@redux/reducers/ui';
 import {stopClusterConnection} from '@redux/thunks/cluster';
 
-import {ActivityBar} from '@monokle/components';
+import {ActivityBar} from '@components/foundation/layout';
 import {Colors} from '@shared/styles';
 import {trackEvent} from '@shared/utils/telemetry';
 

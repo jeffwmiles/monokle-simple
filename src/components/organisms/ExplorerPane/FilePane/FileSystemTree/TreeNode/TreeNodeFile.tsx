@@ -12,7 +12,7 @@ import {selectionFilePathSelector} from '@redux/selectors';
 
 import {ContextMenu, Dots} from '@components/atoms';
 
-import {Spinner} from '@monokle/components';
+import { Spinner } from "@components/foundation/primitives";
 import {FileEntry} from '@shared/models/fileEntry';
 import {Colors} from '@shared/styles';
 import {isEqual} from '@shared/utils/isEqual';

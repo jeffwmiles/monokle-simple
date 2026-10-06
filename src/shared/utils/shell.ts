@@ -1,8 +1,10 @@
-import {app, shell} from 'electron';
+import electron from 'electron';
 
 import * as os from 'os';
 
 import {trackEvent} from '@shared/utils/telemetry';
+
+const {shell} = electron;
 
 export function showItemInFolder(fullPath: string) {
   shell.showItemInFolder(fullPath);
@@ -63,7 +65,7 @@ export function openFeedback() {
 
 export function openLogs() {
   trackEvent('help/open_link', {linkType: 'logs'});
-  shell.showItemInFolder(app.getPath('logs'));
+  shell.showItemInFolder(electron.app.getPath('logs'));
 }
 
 export function openUniqueObjectNameTopic() {

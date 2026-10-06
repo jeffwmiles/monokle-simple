@@ -5,18 +5,18 @@ export type InterpolateTemplateOptions = {
   formsData: any[];
 };
 
-const TemplateFormRuntype = Rt.Record({
+const TemplateFormRuntype = Rt.Object({
   name: Rt.String,
   description: Rt.String,
   schema: Rt.String,
   uiSchema: Rt.String,
 });
 
-const TemplateManifestRuntype = Rt.Record({
+const TemplateManifestRuntype = Rt.Object({
   filePath: Rt.String,
 });
 
-const TemplateBaseRuntype = Rt.Record({
+const TemplateBaseRuntype = Rt.Object({
   name: Rt.String,
   id: Rt.String,
   author: Rt.String,
@@ -56,7 +56,7 @@ const HelmChartTemplateRuntype = Rt.Union(BundledHelmChartTemplateRuntype, Refer
 
 const AnyTemplateRuntype = Rt.Union(VanillaTemplateRuntype, HelmChartTemplateRuntype);
 
-const TemplatePackRuntype = Rt.Record({
+const TemplatePackRuntype = Rt.Object({
   id: Rt.String,
   name: Rt.String,
   author: Rt.String,
@@ -64,7 +64,7 @@ const TemplatePackRuntype = Rt.Record({
   description: Rt.String,
   repository: Rt.String,
   templates: Rt.Array(
-    Rt.Record({
+    Rt.Object({
       path: Rt.String,
     })
   ),

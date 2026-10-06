@@ -15,7 +15,7 @@ type Props = {
   value: string;
   icon: ReactNode;
   tableVisible: boolean;
-  table: JSX.Element;
+  table: React.JSX.Element;
   tablePlacement?: DropDownProps['placement'];
   onTableToggle?: (newVisible: boolean) => void;
 };

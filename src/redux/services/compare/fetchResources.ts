@@ -9,20 +9,17 @@ import {YAML_DOCUMENT_DELIMITER_NEW_LINE} from '@constants/constants';
 
 import {currentConfigSelector, kubeConfigPathSelector} from '@redux/appConfig';
 import {createKubeClientWithSetup} from '@redux/cluster/service/kube-client';
-import {getCommitResources} from '@redux/git/git.ipc';
 import {runKustomize} from '@redux/thunks/preview';
 
-import {buildHelmConfigCommand, createHelmInstallCommand, createHelmTemplateCommand} from '@utils/helm';
+import {buildHelmConfigCommand, createHelmTemplateCommand} from '@utils/helm';
 
 import {ERROR_MSG_FALLBACK} from '@shared/constants/constants';
 import {ROOT_FILE_ENTRY} from '@shared/constants/fileEntry';
-import {GitCommitResourcesResult} from '@shared/ipc/git';
 import {CommandOptions} from '@shared/models/commands';
 import {
   ClusterResourceSet,
   CommandResourceSet,
   CustomHelmResourceSet,
-  GitResourceSet,
   HelmResourceSet,
   KustomizeResourceSet,
   LocalResourceSet,
@@ -30,7 +27,6 @@ import {
 } from '@shared/models/compare';
 import {K8sResource} from '@shared/models/k8sResource';
 import {RootState} from '@shared/models/rootState';
-import {selectKubeconfig} from '@shared/utils/cluster/selectors';
 import {hasCommandFailed, runCommandInMainThread} from '@shared/utils/commands';
 import {isDefined} from '@shared/utils/filter';
 
@@ -52,7 +48,7 @@ export async function fetchResources(state: RootState, options: ResourceSet): Pr
     case 'kustomize':
       return previewKustomizeResources(state, options);
     case 'git': {
-      return fetchGitResources(state, options);
+      throw new Error('Git comparisons are disabled. Compare local Helm output instead.');
     }
     case 'command': {
       return fetchCommandResources(state, options);
@@ -66,26 +62,6 @@ function fetchLocalResources(state: RootState, options: LocalResourceSet): K8sRe
   return Object.values(
     joinK8sResourceMap(state.main.resourceMetaMapByStorage.local, state.main.resourceContentMapByStorage.local)
   ).filter(r => r.origin.filePath.startsWith(options.folder === '<root>' ? '' : `${options.folder}${sep}`));
-}
-
-async function fetchGitResources(state: RootState, options: GitResourceSet): Promise<K8sResource<'local'>[]> {
-  const {commitHash = ''} = options;
-
-  let filesContent: GitCommitResourcesResult;
-
-  try {
-    filesContent = await getCommitResources({localPath: state.config.selectedProjectRootFolder || '', commitHash});
-  } catch (e) {
-    filesContent = {};
-  }
-
-  return Object.entries(filesContent)
-    .flatMap(([filePath, content]) => extractK8sResources(content, 'local', {filePath, fileOffset: 0}))
-    .filter(resource =>
-      `${sep}${resource.origin.filePath.replaceAll('/', sep)}`.startsWith(
-        options.folder === '<root>' ? '' : `${options.folder}${sep}`
-      )
-    );
 }
 
 async function fetchCommandResources(state: RootState, options: CommandResourceSet): Promise<K8sResource[]> {
@@ -156,15 +132,6 @@ function extractResultFromHelmOutput(result: string) {
 async function previewHelmResources(state: RootState, options: HelmResourceSet): Promise<K8sResource<'preview'>[]> {
   try {
     const {chartId, valuesId} = options;
-    const projectConfig = currentConfigSelector(state);
-    const kubeconfig = selectKubeconfig(state);
-
-    if (!kubeconfig?.isValid) {
-      throw new Error('Kubeconfig is invalid');
-    }
-
-    const currentContext = kubeconfig.currentContext;
-    const helmPreviewMode = projectConfig.settings ? projectConfig.settings.helmPreviewMode : 'template';
 
     const chart = state.main.helmChartMap[chartId];
     const valuesFile = state.main.helmValuesMap[valuesId];
@@ -178,35 +145,7 @@ async function previewHelmResources(state: RootState, options: HelmResourceSet):
       throw new Error(`Values not found: ${values}`);
     }
 
-    let command: CommandOptions;
-    if (helmPreviewMode === 'install') {
-      if (!kubeconfig.path || !currentContext) {
-        throw new Error('Kube context not found');
-      }
-
-      command = createHelmInstallCommand(
-        {
-          values: path.join(folder, valuesFile.name),
-          name: folder,
-          chart: chart.name,
-          dryRun: true,
-        },
-        {
-          KUBECONFIG: kubeconfig.path,
-        }
-      );
-    } else {
-      command = createHelmTemplateCommand(
-        {
-          values: path.join(folder, valuesFile.name),
-          chart: chart.name,
-          name: folder,
-        },
-        {
-          KUBECONFIG: kubeconfig.path,
-        }
-      );
-    }
+    const command = createHelmTemplateCommand({values, chart: chart.name, name: folder});
 
     const result = await runCommandInMainThread(command);
 
@@ -233,21 +172,12 @@ async function previewCustomHelmResources(
 ): Promise<K8sResource<'preview'>[]> {
   try {
     const {chartId, configId} = options;
-    const kubeconfig = selectKubeconfig(state);
-
-    if (!kubeconfig?.isValid) {
-      throw new Error('Kubeconfig is invalid');
-    }
-
-    const currentContext = kubeconfig.currentContext;
 
     const rootFolder = state.main.fileMap[ROOT_FILE_ENTRY].filePath;
 
     const chart = state.main.helmChartMap[chartId];
     const helmConfig = state.config.projectConfig?.helm?.previewConfigurationMap?.[configId];
     invariant(chart && helmConfig, 'invalid_configuration');
-
-    if (!kubeconfig || !currentContext) return [];
 
     const valuesFileItems = Object.values(helmConfig.valuesFileItemMap)
       .filter(isDefined)
@@ -268,7 +198,6 @@ async function previewCustomHelmResources(
       commandId: uuid(),
       cmd: 'helm',
       args: args.splice(1),
-      env: {KUBECONFIG: kubeconfig.path},
     };
 
     const result = await runCommandInMainThread(command);

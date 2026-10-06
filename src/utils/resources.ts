@@ -1,4 +1,4 @@
-import flatten from 'flat';
+import {flatten} from 'flat';
 import _ from 'lodash';
 
 import {CLUSTER_RESOURCE_IGNORED_PATHS} from '@constants/clusterResource';

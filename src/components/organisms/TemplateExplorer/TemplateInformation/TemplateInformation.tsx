@@ -1,11 +1,13 @@
 import {shell} from 'electron';
 
 import {Collapse, Descriptions} from 'antd';
-import Link from 'antd/lib/typography/Link';
+import {Typography as AntdTypography} from 'antd';
 
 import {useAppSelector} from '@redux/hooks';
 
 import * as S from './TemplateInformation.styled';
+
+const Link = AntdTypography.Link;
 
 const TemplateInformation: React.FC = () => {
   const template = useAppSelector(

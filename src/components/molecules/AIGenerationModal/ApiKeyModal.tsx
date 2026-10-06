@@ -25,7 +25,7 @@ const ApiKeyModal = (props: ApiKeyModalProps) => {
   const {isVisible, onClose} = props;
   const dispatch = useAppDispatch();
   const apiKey = useAppSelector(state => state.config.userApiKeys.OpenAI);
-  const [inputApiKey, setInputApiKey] = useState(apiKey);
+  const [inputApiKey, setInputApiKey] = useState(apiKey ?? '');
 
   const isInputEmpty = useMemo(() => !inputApiKey || inputApiKey.trim() === '', [inputApiKey]);
 

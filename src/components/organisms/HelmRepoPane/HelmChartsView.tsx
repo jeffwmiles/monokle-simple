@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef} from 'react';
 
 import {Form, Modal, Typography} from 'antd';
-import {ColumnProps} from 'antd/lib/table';
+import type {TableColumnType as ColumnProps} from 'antd';
 
 import {RightOutlined, SearchOutlined} from '@ant-design/icons';
 
@@ -20,7 +20,7 @@ import {sortChartsByName, useSearchHelmCharts} from '@hooks/useSearchHelmCharts'
 import {addHelmRepoCommand} from '@utils/helm';
 import {useMainPaneDimensions} from '@utils/hooks';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
 import {ChartInfo} from '@shared/models/ui';
 import {openUrlInExternalBrowser, trackEvent} from '@shared/utils';
 import {runCommandInMainThread} from '@shared/utils/commands';

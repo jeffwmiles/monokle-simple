@@ -60,7 +60,7 @@ const initialAppState: AppState = {
   prevConfEditor: {
     isOpen: false,
   },
-  deviceID: electronStore.get('main.deviceID'),
+  deviceID: electronStore.get('main.deviceID') ?? '',
   filtersPresets: electronStore.get('main.filtersPresets') || {},
   imageMap: {},
   autosaving: {},
@@ -72,7 +72,7 @@ const initialAppConfigState: AppConfig = {
   settings: {
     filterObjectsOnSelection: false,
     autoZoomGraphOnSelection: true,
-    helmPreviewMode: electronStore.get('appConfig.settings.helmPreviewMode') || 'template',
+    helmPreviewMode: 'template',
     kustomizeCommand: electronStore.get('appConfig.settings.kustomizeCommand') || 'kubectl',
     theme: electronStore.get('appConfig.settings.theme'),
     textSize: electronStore.get('appConfig.settings.textSize'),
@@ -105,11 +105,11 @@ const initialAppConfigState: AppConfig = {
   selectedProjectRootFolder: null,
   projectConfig: null,
   isProjectLoading: true,
-  projectsRootPath: electronStore.get('appConfig.projectsRootPath'),
+  projectsRootPath: electronStore.get('appConfig.projectsRootPath') ?? '',
   k8sVersion: electronStore.get('appConfig.k8sVersion') || PREDEFINED_K8S_VERSION,
   favoriteTemplates: electronStore.get('appConfig.favoriteTemplates') || [],
-  disableEventTracking: electronStore.get('appConfig.disableEventTracking'),
-  disableErrorReporting: electronStore.get('appConfig.disableErrorReporting'),
+  disableEventTracking: electronStore.get('appConfig.disableEventTracking') ?? false,
+  disableErrorReporting: electronStore.get('appConfig.disableErrorReporting') ?? false,
   isAccessLoading: false,
   kubeConfigContextsColors: electronStore.get('appConfig.kubeConfigContextsColors') || {},
   userApiKeys: electronStore.get('appConfig.userApiKeys') || {},
@@ -117,10 +117,12 @@ const initialAppConfigState: AppConfig = {
 
 const initialAlertState: AlertState = {};
 
-const uiLeftMenuSelection = LeftMenuSelectionOptions.includes(electronStore.get('ui.leftMenu.selection'))
+const uiLeftMenuSelection = LeftMenuSelectionOptions.filter(
+  selection => !['dashboard', 'git'].includes(selection)
+).includes(electronStore.get('ui.leftMenu.selection'))
   ? electronStore.get('ui.leftMenu.selection')
   : 'explorer';
-const uiLeftMenuBottomSelection = electronStore.get('ui.leftMenu.bottomSelection');
+const uiLeftMenuBottomSelection = electronStore.get('ui.leftMenu.bottomSelection') ?? undefined;
 
 let paneConfiguration: PaneConfiguration = electronStore.get('ui.paneConfiguration');
 

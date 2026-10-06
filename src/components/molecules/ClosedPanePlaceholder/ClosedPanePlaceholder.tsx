@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {useAppDispatch} from '@redux/hooks';
 import {toggleLeftMenu} from '@redux/reducers/ui';
 
-import {PaneCloseIcon} from '@monokle/components';
+import { PaneCloseIcon } from "@components/foundation/primitives";
 import {CLOSED_PANE_PLACEHOLDER_WIDTH} from '@shared/constants/constants';
 import {Colors} from '@shared/styles/colors';
 

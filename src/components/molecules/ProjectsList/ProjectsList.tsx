@@ -14,7 +14,6 @@ import thunderIcon from '@assets/figures/thunderIcon.svg';
 import ProjectCard from '../ProjectCard';
 import * as S from './ProjectsList.styled';
 
-type FiltersType = 'all' | 'local' | 'git';
 type CreationFiltersType = 'last-created' | 'first-created' | 'name-asc' | 'name-desc' | 'last-opened';
 
 const ProjectsList: React.FC = () => {
@@ -26,7 +25,6 @@ const ProjectsList: React.FC = () => {
     [activeProject, allProjects]
   );
 
-  const [typeFilter, setTypeFilter] = useState<FiltersType>('all');
   const [creationFilter, setCreationFilter] = useState<CreationFiltersType>('last-opened');
   const [searchInput, setSearchInput] = useState<string>('');
 
@@ -44,21 +42,10 @@ const ProjectsList: React.FC = () => {
         : 'asc'
     );
 
-    if (typeFilter === 'all') {
-      return searchInput.trim() === ''
-        ? projects
-        : projects.filter(p => p.name?.toLowerCase().includes(searchInput.toLowerCase()));
-    }
-
-    if (typeFilter === 'git') {
-      return searchInput.trim() === ''
-        ? projects.filter(p => p.isGitRepo)
-        : projects.filter(p => p.name?.toLowerCase().includes(searchInput.toLowerCase()) && p.isGitRepo);
-    }
     return searchInput.trim() === ''
-      ? projects.filter(p => !p.isGitRepo)
-      : projects.filter(p => p.name?.toLowerCase().includes(searchInput.toLowerCase()) && !p.isGitRepo);
-  }, [creationFilter, currentProjects, typeFilter, searchInput]);
+      ? projects
+      : projects.filter(p => p.name?.toLowerCase().includes(searchInput.toLowerCase()));
+  }, [creationFilter, currentProjects, searchInput]);
 
   if (size(filteredAndSortedProjects) === 0 && searchInput.trim() === '') {
     return (
@@ -79,24 +66,6 @@ const ProjectsList: React.FC = () => {
     <>
       <S.SortFilterAndSearchContainer>
         <S.SortAndFiltersContainer>
-          <S.Select
-            dropdownMatchSelectWidth={false}
-            value={typeFilter}
-            onChange={value => {
-              setTypeFilter(value as FiltersType);
-            }}
-          >
-            <Select.Option key="all" value="all">
-              All
-            </Select.Option>
-            <Select.Option key="local" value="local">
-              Local
-            </Select.Option>
-            <Select.Option key="git" value="git">
-              Git
-            </Select.Option>
-          </S.Select>
-
           <S.Select
             dropdownMatchSelectWidth={false}
             value={creationFilter}

@@ -11,7 +11,7 @@ import {useAppSelector} from '@redux/hooks';
 
 import {ContextMenu, Dots} from '@components/atoms';
 
-import {Spinner} from '@monokle/components';
+import { Spinner } from "@components/foundation/primitives";
 import {ROOT_FILE_ENTRY} from '@shared/constants/fileEntry';
 import {FileEntry} from '@shared/models/fileEntry';
 import {isEqual} from '@shared/utils/isEqual';

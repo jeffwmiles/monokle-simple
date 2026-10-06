@@ -1,7 +1,7 @@
 import {FC, useCallback, useEffect, useState} from 'react';
 
 import {Button, Form, Popover} from 'antd';
-import Column from 'antd/lib/table/Column';
+import {Table as AntdTable} from 'antd';
 
 import {CLUSTER_AVAILABLE_COLORS} from '@constants/constants';
 
@@ -18,6 +18,8 @@ import {BackgroundColors} from '@shared/styles/colors';
 import {selectKubeContext, selectKubeconfig} from '@shared/utils/cluster/selectors';
 
 import * as S from './ClusterSelectionTable.styled';
+
+const Column = AntdTable.Column;
 
 interface ClusterSelectionTableProps {
   setIsClusterDropdownOpen: (isOpen: boolean) => void;

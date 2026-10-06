@@ -21,7 +21,7 @@ import {useNewResourceMenuItems} from '@hooks/menuItemsHooks';
 
 import {useSelectorWithRef} from '@utils/hooks';
 
-import {TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
 import {ROOT_FILE_ENTRY} from '@shared/constants/fileEntry';
 import {isInClusterModeSelector, isInPreviewModeSelector, trackEvent} from '@shared/utils';
 

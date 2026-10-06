@@ -10,7 +10,6 @@ import {logToFile} from '@shared/utils/logs';
 
 import {createWindow} from './createWindow';
 import {getDockMenu} from './menu';
-import {PROXY_SERVICE} from './services/cluster/globals';
 
 Object.assign(console, logToFile.functions);
 
@@ -70,7 +69,6 @@ export const openApplication = async (givenPath?: string) => {
   });
 
   app.on('quit', (_event, exitCode) => {
-    PROXY_SERVICE.stopAll();
     trackEvent('APP_QUIT', {exitCode});
   });
 };

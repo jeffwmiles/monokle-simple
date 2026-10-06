@@ -11,7 +11,6 @@ import {useAppDispatch, useAppSelector} from '@redux/hooks';
 
 import {ClusterContextSelect} from './ClusterContextSelect';
 import CommandSelect from './CommandSelect';
-import GitSelect from './GitSelect';
 import {HelmSelect} from './HelmSelect';
 import {KustomizeSelect} from './KustomizeSelect';
 import LocalSelect from './LocalSelect';
@@ -40,7 +39,6 @@ export const ResourceSetSelector: React.FC<Props> = ({side}: Props) => {
       <S.SelectSpacer>
         <ResourceSetTypeSelect side={side} />
         {resourceSet?.type === 'local' && <LocalSelect side={side} />}
-        {resourceSet?.type === 'git' && <GitSelect side={side} />}
         {resourceSet && ['helm', 'helm-custom'].includes(resourceSet.type) && <HelmSelect side={side} />}
         {resourceSet?.type === 'kustomize' && (
           <S.KustomizeSelectContainer>

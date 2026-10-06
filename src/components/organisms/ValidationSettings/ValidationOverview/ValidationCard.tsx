@@ -6,7 +6,7 @@ import {useAppDispatch} from '@redux/hooks';
 import {pluginRulesSelector, useValidationSelector} from '@redux/validation/validation.selectors';
 import {toggleValidation, updateSelectedPluginConfiguration} from '@redux/validation/validation.slice';
 
-import {IconNames} from '@monokle/components';
+import { IconNames } from "@components/foundation/primitives";
 import {PluginMetadataWithConfig} from '@monokle/validation';
 import {trackEvent} from '@shared/utils';
 

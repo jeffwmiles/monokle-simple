@@ -1,3 +1,5 @@
+import {CLUSTER_DISABLED_MESSAGE, LIVE_CLUSTERS_ENABLED} from '@shared/constants/capabilities';
+
 import {ProxyInstance} from './ProxyInstance';
 
 const PROXY_MAX_ATTEMPTS = 25;
@@ -8,6 +10,10 @@ export class ProxyService {
   private last: ProxyInstance | undefined;
 
   get(context: string, kubeconfig?: string): Promise<ProxyInstance> {
+    if (!LIVE_CLUSTERS_ENABLED) {
+      return Promise.reject(new Error(CLUSTER_DISABLED_MESSAGE));
+    }
+
     const proxy = this.proxies.find(p => p.context === context && p.kubeconfig === kubeconfig);
 
     if (proxy) {

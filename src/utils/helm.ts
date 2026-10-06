@@ -16,8 +16,11 @@ export function buildHelmConfigCommand(
   rootFolderPath: string,
   performDeploy?: boolean
 ): string[] {
+  if (performDeploy) {
+    throw new Error('Helm deployment is disabled in this Helm-only build.');
+  }
   let chartFolderPath = join(rootFolderPath, dirname(helmChart.filePath));
-  let command = performDeploy ? 'install' : helmCommand;
+  const command = 'template';
 
   if (chartFolderPath.endsWith(sep)) {
     chartFolderPath = chartFolderPath.slice(0, -1);
@@ -38,13 +41,6 @@ export function buildHelmConfigCommand(
         .flat()
     );
   }
-
-  if (!performDeploy && command === 'install') {
-    args.push('--dry-run');
-  }
-
-  const clusterArgs = getHelmClusterArgs();
-  args.push(...clusterArgs);
 
   return args;
 }

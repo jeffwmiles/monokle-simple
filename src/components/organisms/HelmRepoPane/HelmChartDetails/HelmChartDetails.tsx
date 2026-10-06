@@ -2,11 +2,11 @@ import {useCallback, useMemo, useState} from 'react';
 import {useAsync} from 'react-use';
 
 import {Dropdown} from 'antd';
+import type {TabsProps} from 'antd';
 
 import {CloudDownloadOutlined, DownOutlined} from '@ant-design/icons';
 
 import {first} from 'lodash';
-import {Tab} from 'rc-tabs/lib/interface';
 
 import {kubeConfigContextSelector} from '@redux/appConfig';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
@@ -17,7 +17,8 @@ import {HelmChartModalConfirmWithNamespaceSelect} from '@components/molecules';
 
 import {searchHelmRepoCommand} from '@utils/helm';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
+import {LIVE_CLUSTERS_ENABLED} from '@shared/constants/capabilities';
 import {HelmChartDetailsTab} from '@shared/models/ui';
 import {trackEvent} from '@shared/utils';
 import {runCommandInMainThread} from '@shared/utils/commands';
@@ -30,7 +31,7 @@ import PullHelmChartModal from './PullHelmChartModal';
 
 import * as S from './styled';
 
-const createTabItems = (chartName: string): Tab[] => [
+const createTabItems = (chartName: string): NonNullable<TabsProps['items']> => [
   {
     key: 'info',
     label: 'Info',
@@ -144,24 +145,26 @@ const HelmChartDetails = () => {
             <CloudDownloadOutlined />
             Download locally ({latestVersion})
           </Dropdown.Button>
-          <Dropdown.Button
-            loading={isLoadingVersions}
-            menu={{
-              items,
-              onClick: ({key}) => {
-                setChartVersion(key);
-                setInstallModalOpen(true);
-              },
-            }}
-            size="large"
-            type="primary"
-            icon={<DownOutlined />}
-            onClick={onInstallLatestHelmChartHandler}
-            getPopupContainer={() => document.getElementById('versions')!}
-          >
-            <Icon name="cluster-dashboard" />
-            Install in cluster ({latestVersion})
-          </Dropdown.Button>
+          {LIVE_CLUSTERS_ENABLED && (
+            <Dropdown.Button
+              loading={isLoadingVersions}
+              menu={{
+                items,
+                onClick: ({key}) => {
+                  setChartVersion(key);
+                  setInstallModalOpen(true);
+                },
+              }}
+              size="large"
+              type="primary"
+              icon={<DownOutlined />}
+              onClick={onInstallLatestHelmChartHandler}
+              getPopupContainer={() => document.getElementById('versions')!}
+            >
+              <Icon name="cluster-dashboard" />
+              Install in cluster ({latestVersion})
+            </Dropdown.Button>
+          )}
         </S.Footer>
 
         <PullHelmChartModal

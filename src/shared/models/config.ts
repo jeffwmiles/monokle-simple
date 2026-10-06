@@ -1,4 +1,4 @@
-import {Cluster, Context, User} from '@kubernetes/client-node';
+import type {Cluster, Context, User} from '@kubernetes/client-node';
 
 import {ClusterColors} from './cluster';
 import {KustomizeCommandType} from './kustomize';
@@ -79,7 +79,7 @@ interface AppConfig {
   fileExplorerSortOrder: FileExplorerSortOrder;
   isNewVersionAvailable: boolean;
   userApiKeys: {
-    [vendor in ApiKeyVendor]: string;
+    [vendor in ApiKeyVendor]?: string;
   };
 }
 

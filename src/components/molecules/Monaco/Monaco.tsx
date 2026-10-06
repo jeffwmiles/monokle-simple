@@ -1,6 +1,6 @@
 /* eslint-disable import/order */
 import {useCallback, useEffect, useMemo, useRef} from 'react';
-import MonacoEditor, {monaco} from 'react-monaco-editor';
+import MonacoEditor, { monaco } from "@components/foundation/monaco";
 import {useMeasure, useUnmount} from 'react-use';
 
 import fs from 'fs';
@@ -8,8 +8,9 @@ import log from 'loglevel';
 // eslint-disable-next-line import/no-duplicates
 import 'monaco-editor';
 // eslint-disable-next-line import/no-duplicates
-import {Uri} from 'monaco-editor/esm/vs/editor/editor.api';
+import {Uri} from 'monaco-editor';
 import 'monaco-yaml';
+import '@editor/monacoWorkers';
 import path from 'path';
 import {Document, ParsedNode, isMap} from 'yaml';
 
@@ -65,21 +66,6 @@ type IProps = {
   providedResourceSelection?: ResourceSelection;
   providedFilePath?: string;
   providedRange?: MonacoRange;
-};
-
-window.MonacoEnvironment = {
-  getWorker(moduleId, label) {
-    switch (label) {
-      case 'editorWorkerService':
-        return new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url));
-      case 'json':
-        return new Worker(new URL('monaco-editor/esm/vs/language/json/json.worker.js', import.meta.url));
-      case 'yaml':
-        return new Worker(new URL('monaco-yaml/yaml.worker.js', import.meta.url));
-      default:
-        throw new Error(`Unknown label ${label}`);
-    }
-  },
 };
 
 function isValidResourceDocument(d: Document.Parsed<ParsedNode>) {

@@ -1,6 +1,5 @@
-import type {DefaultLogFields, ListLogLine} from 'simple-git';
-
 import type {FileMapType} from '@shared/models/appState';
+import type {GitBranchCommit} from '@shared/models/git';
 
 type LocalPathBranchNameParams = {
   localPath: string;
@@ -53,5 +52,5 @@ export type GitAheadBehindCommitsCountResult = {
   behindCount: number;
 };
 
-export type GitBranchCommitsResult = (DefaultLogFields & ListLogLine)[];
+export type GitBranchCommitsResult = GitBranchCommit[];
 export type GitCommitResourcesResult = Record<string, string>;

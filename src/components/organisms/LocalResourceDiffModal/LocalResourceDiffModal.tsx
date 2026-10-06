@@ -1,7 +1,7 @@
 import {LegacyRef, useEffect, useMemo, useState} from 'react';
-import {MonacoDiffEditor} from 'react-monaco-editor';
+import { MonacoDiffEditor } from "@components/foundation/monaco";
 import {useStore} from 'react-redux';
-import {ResizableBox, ResizeHandle} from 'react-resizable';
+import {ResizableBox, ResizeHandleAxis} from 'react-resizable';
 import {useMeasure} from 'react-use';
 
 import {Button, Select, Skeleton, Switch} from 'antd';
@@ -36,7 +36,7 @@ import {stringifyK8sResource} from '@utils/yaml';
 
 import {getResourceKindHandler} from '@src/kindhandlers';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
 import {AlertEnum, AlertType} from '@shared/models/alert';
 import {RootState} from '@shared/models/rootState';
 import {isInClusterModeSelector} from '@shared/utils/selectors';
@@ -375,7 +375,7 @@ const DiffModal = () => {
           maxConstraints={[window.innerWidth - 64, resizableBoxHeight]}
           axis="x"
           resizeHandles={['w', 'e']}
-          handle={(h: ResizeHandle, ref: LegacyRef<HTMLSpanElement>) => (
+          handle={(h: ResizeHandleAxis, ref: LegacyRef<HTMLSpanElement>) => (
             <span className={`custom-modal-handle custom-modal-handle-${h}`} ref={ref} />
           )}
         >

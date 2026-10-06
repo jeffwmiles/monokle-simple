@@ -4,7 +4,7 @@ import CRDsSchemaValidation from '../CRDsSchemaValidation/CRDsSchemaValidation';
 
 export const VALIDATION_CONFIGURATION_COMPONENTS: Record<
   string,
-  ((props: PluginMetadataWithConfig) => JSX.Element) | false | undefined
+  ((props: PluginMetadataWithConfig) => React.JSX.Element) | false | undefined
 > = {
   'CRDs Schema': () => <CRDsSchemaValidation />,
   'yaml-syntax': false,

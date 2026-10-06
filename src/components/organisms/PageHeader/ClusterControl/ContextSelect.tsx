@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import {useAppDispatch, useAppSelector} from '@redux/hooks';
 import {setLeftMenuSelection} from '@redux/reducers/ui';
 
-import {Icon} from '@monokle/components';
+import { Icon } from "@components/foundation/primitives";
 import {Colors} from '@shared/styles';
 import {selectKubeconfig} from '@shared/utils/cluster/selectors';
 import {isInClusterModeSelector} from '@shared/utils/selectors';

@@ -22,7 +22,6 @@ export const ResourceSetTypeSelect: React.FC<Props> = ({side}) => {
   const dispatch = useAppDispatch();
   const currentContext = useAppSelector(state => state.main.clusterConnection?.context);
   const isInQuickClusterMode = useAppSelector(state => state.ui.isInQuickClusterMode);
-  const isGitDisabled = useAppSelector(state => Boolean(!state.git.repo));
   const isHelmDisabled = useAppSelector(state => isEmpty(state.main.helmChartMap));
   const isCommandDisabled = useAppSelector(state =>
     isEmpty(Object.values(state.config.projectConfig?.savedCommandMap || {}).filter(command => Boolean(command)))
@@ -44,7 +43,7 @@ export const ResourceSetTypeSelect: React.FC<Props> = ({side}) => {
 
   const handleSelectType = useCallback(
     (type: ResourceSet['type']) => {
-      if (type === 'local' || type === 'git') {
+      if (type === 'local') {
         dispatch(resourceSetSelected({side, value: {type, folder: '<root>'}}));
       } else {
         dispatch(resourceSetSelected({side, value: {type}}));
@@ -72,9 +71,6 @@ export const ResourceSetTypeSelect: React.FC<Props> = ({side}) => {
             </Select.Option>
             <Select.Option disabled={isKustomizeDisabled} value="kustomize">
               Kustomize Preview
-            </Select.Option>
-            <Select.Option disabled={isGitDisabled} value="git">
-              Git
             </Select.Option>
             <Select.Option disabled={isCommandDisabled} value="command">
               Command

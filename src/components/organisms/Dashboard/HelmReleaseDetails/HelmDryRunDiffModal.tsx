@@ -1,4 +1,4 @@
-import {MonacoDiffEditor} from 'react-monaco-editor';
+import { MonacoDiffEditor } from "@components/foundation/monaco";
 import {useAsync, useMeasure} from 'react-use';
 
 import {Modal as RawModal} from 'antd';

@@ -76,11 +76,11 @@ async function loadCustomResourceObjects(
         const version = findDefaultVersionForCRD(crd.object) || 'v1';
         return namespace
           ? k8sApi
-              .listNamespacedCustomObject(crd.object.spec.group, version, namespace, crd.object.spec.names.plural)
-              .then(response => getK8sObjectsAsYaml(getItemsFromResponseBody(response.body)))
+                .listNamespacedCustomObject({group: crd.object.spec.group, version, namespace, plural: crd.object.spec.names.plural})
+                .then(response => getK8sObjectsAsYaml(getItemsFromResponseBody(response)))
           : k8sApi
-              .listClusterCustomObject(crd.object.spec.group, version, crd.object.spec.names.plural)
-              .then(response => getK8sObjectsAsYaml(getItemsFromResponseBody(response.body)));
+                .listClusterCustomObject({group: crd.object.spec.group, version, plural: crd.object.spec.names.plural})
+                .then(response => getK8sObjectsAsYaml(getItemsFromResponseBody(response)));
       });
 
     const customResults = await Promise.allSettled(customObjects);

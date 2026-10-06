@@ -1,4 +1,4 @@
-import MonacoEditor, {MonacoDiffEditor} from 'react-monaco-editor';
+import MonacoEditor, { MonacoDiffEditor } from "@components/foundation/monaco";
 
 import invariant from 'tiny-invariant';
 

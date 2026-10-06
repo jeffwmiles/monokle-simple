@@ -144,7 +144,7 @@ export const ProjectCard: React.FC<IProps> = props => {
       <S.Name>{project.name && highlightQuery(project.name)}</S.Name>
 
       <S.ProjectInfo>
-        <S.Type>{project.isGitRepo ? 'Git' : 'Local'}</S.Type>
+        <S.Type>Local</S.Type>
         <S.Path>{project.rootFolder}</S.Path>
       </S.ProjectInfo>
 

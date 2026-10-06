@@ -2,7 +2,7 @@
  <em>**Note:** Unfortunately [we are not able to maintain or evolve Monokle at this time](https://github.com/kubeshop/monokle/issues/4265).
 
  We are of course happy to help anyone interested in [contributing](https://kubeshop.github.io/monokle/contributing) to resolve any outstanding issues! Thanks for your understanding!</em>
- 
+
  @olensmar
 
 
@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  🧐 Monokle streamlines the process of creating, analyzing, and deploying Kubernetes configurations by providing a unified visual tool for authoring YAML manifests, validating policies, and managing live clusters. 
+  🧐 Monokle streamlines the process of creating, analyzing, and deploying Kubernetes configurations by providing a unified visual tool for authoring YAML manifests, validating policies, and managing live clusters.
 </p>
 
 <p align="center">
@@ -47,7 +47,42 @@
   </a>
 </p>
 
-## Core Features
+## Helm-Only Build
+
+This fork is for local Helm chart rendering and inspection of generated YAML. Live Kubernetes connections,
+deploy/apply operations, Git integration, pod terminals, embedded shells, Kustomize previews, and arbitrary command previews
+are disabled. The upstream feature list below describes the original application, not this fork.
+
+Open a directory containing Helm charts, select a values file in **Dry runs**, or create a **Dry run Configuration**
+to choose and order values files. Rendered YAML remains available for inspection, schema/policy validation,
+and local comparisons. Only Helm must be installed. No Git executable or kubeconfig is required.
+
+Git probing, repository initialization, remote/status queries, and repository polling are removed from project loading
+and file-change handling. Git panes, branches, clone actions, project Git filters, repository file links, and commit
+comparisons are unavailable. Existing folders remain usable as local projects, and `.git` metadata is ignored by the
+file watcher. Manage all version control outside the application. Chart rendering and validation still have their own
+processing costs; removing Git does not eliminate every source of large-folder latency.
+
+All previews use `helm template`, including configurations previously saved with the `install` command.
+Cluster-aware options (`--validate`, kubeconfig/context flags, server dry-runs) and external post-renderers
+are rejected. `--kube-version` and `--api-versions` can simulate Kubernetes capabilities locally, but `lookup`
+cannot query a live cluster. Helm repository downloads and updates still use network access; this is not an
+air-gapped build or an operating-system network sandbox.
+
+Package manifests cannot contain comments, so disabled dependencies are recorded here:
+
+- Removed runtime dependency: `node-pty` (`0.11.0-beta11`), used only by the disabled embedded shell.
+- Removed `simple-git`, `git-url-parse`, and `@types/git-url-parse`. Executable Git service handlers are deleted;
+  HTTPS extension-download links use the standard `URL` parser instead. No Git package is retained as a development dependency.
+- Moved `@kubernetes/client-node` (`0.19.0`) to development dependencies. Dormant cluster handlers and renderer
+  resource handlers still require its APIs/types at build time, but cluster client creation is blocked and
+  the Electron main process no longer loads the SDK. Renderer bundling still includes it.
+- Moved `default-shell`, `xterm`, and `xterm-addon-fit` to development dependencies for compilation of dormant terminal components.
+  They are shared by local and pod terminal code; neither terminal is mounted or has execution IPC handlers.
+
+Rebuild before running or packaging; existing build output and installers still contain the previous capabilities.
+
+## Core Features (Upstream)
 
 - 👩‍💻 Single IDE for your configuration files, manifests, resources and cluster management
 - 🌤️ Connect to your clusters and see real time state and resources

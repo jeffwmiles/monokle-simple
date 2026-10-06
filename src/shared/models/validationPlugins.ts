@@ -1,4 +1,4 @@
-import {IconNames} from '@monokle/components';
+import { IconNames } from "@components/foundation/primitives";
 
 type CustomValidationPluginId = 'crd-schema';
 

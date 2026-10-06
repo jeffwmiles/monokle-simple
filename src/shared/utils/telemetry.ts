@@ -1,4 +1,4 @@
-import {app, ipcRenderer} from 'electron';
+import electron from 'electron';
 
 import {machineIdSync} from 'node-machine-id';
 
@@ -11,10 +11,10 @@ const machineId: string = machineIdSync();
 
 export const trackEvent = <TEvent extends Event>(eventName: TEvent, payload?: EventMap[TEvent]) => {
   if (isRendererThread()) {
-    ipcRenderer.send('track-event', {eventName, payload});
+    electron.ipcRenderer.send('track-event', {eventName, payload});
   } else {
     const segmentClient = getSegmentClient();
-    const properties: any = {appVersion: app.getVersion(), ...payload};
+    const properties: any = {appVersion: electron.app.getVersion(), ...payload};
     segmentClient?.track({
       event: eventName,
       properties,

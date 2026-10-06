@@ -2,7 +2,7 @@ import {useLayoutEffect, useRef} from 'react';
 
 import {Dropdown, Skeleton} from 'antd';
 
-import {CloseCircleFilled, CodeOutlined} from '@ant-design/icons';
+import {CloseCircleFilled} from '@ant-design/icons';
 
 import {size} from 'lodash';
 import styled from 'styled-components';
@@ -13,15 +13,13 @@ import {dryRunNodesSelector} from '@redux/selectors/dryRunsSelectors';
 import {TitleBarWrapper} from '@components/atoms';
 import HoverableButton from '@components/atoms/HoverableButton';
 
-import {Icon, TitleBar} from '@monokle/components';
+import { TitleBar } from "@components/foundation/primitives";
 import {Colors} from '@shared/styles/colors';
 import {elementScroll, useVirtualizer} from '@tanstack/react-virtual';
 
-import CommandRenderer from './CommandRenderer';
 import HelmChartRenderer from './HelmChartRenderer';
 import HelmConfigRenderer from './HelmConfigRenderer';
 import HelmValueRenderer from './HelmValueRenderer';
-import KustomizeRenderer from './KustomizeRenderer';
 import {useNewDryRunsMenuItems} from './useNewDryRunsMenuItems';
 
 const ROW_HEIGHT = 26;
@@ -47,17 +45,11 @@ const DryRunsPane: React.FC = () => {
     }
 
     const index = list.findIndex(item => {
-      if (item.type === 'command' && preview.type === 'command') {
-        return item.commandId === preview.commandId;
-      }
       if (item.type === 'helm-values' && preview.type === 'helm') {
         return item.valuesId === preview.valuesFileId;
       }
       if (item.type === 'helm-config' && preview.type === 'helm-config') {
         return item.configId === preview.configId;
-      }
-      if (item.type === 'kustomize' && preview.type === 'kustomize') {
-        return item.kustomizationId === preview.kustomizationId;
       }
       return false;
     });
@@ -106,8 +98,7 @@ const DryRunsPane: React.FC = () => {
         <EmptyContainer>
           <EmptyIcon />
           <p>
-            <BoldSpan>No dry runs available</BoldSpan> for this repository. Dry runs allow you to simulate the
-            installation of a chart or other component without actually creating any resources in the cluster.
+            <BoldSpan>No Helm charts found</BoldSpan> in this folder.
           </p>
         </EmptyContainer>
       ) : (
@@ -134,22 +125,12 @@ const DryRunsPane: React.FC = () => {
                     transform: `translateY(${virtualItem.start}px)`,
                   }}
                 >
-                  {node.type === 'heading' ? (
-                    <Heading>
-                      {node.icon === 'command' ? <CodeOutlined /> : <Icon name={node.icon} />}
-                      {node.title.trim() !== '' && <span>{node.title}</span>}
-                      {node.subtitle && <Prefix>{node.subtitle}</Prefix>}
-                    </Heading>
-                  ) : node.type === 'kustomize' ? (
-                    <KustomizeRenderer kustomizationId={node.kustomizationId} />
-                  ) : node.type === 'helm-chart' ? (
+                  {node.type === 'helm-chart' ? (
                     <HelmChartRenderer id={node.chartId} />
                   ) : node.type === 'helm-values' ? (
                     <HelmValueRenderer id={node.valuesId} />
                   ) : node.type === 'helm-config' ? (
                     <HelmConfigRenderer id={node.configId} />
-                  ) : node.type === 'command' ? (
-                    <CommandRenderer id={node.commandId} />
                   ) : null}
                 </VirtualItem>
               );
